@@ -19,7 +19,9 @@
   body { margin: 0; background: var(--bg); color: var(--text);
     font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
   main { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
-  h1 { margin: 0 0 20px; font-size: 28px; }
+  header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px 16px; margin-bottom: 20px; }
+  h1 { margin: 0; font-size: 28px; }
+  #updated { color: var(--muted); font-size: 13px; }
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
   table { width: 100%; border-collapse: collapse; }
   th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
@@ -73,7 +75,7 @@
 </head>
 <body>
 <main>
-  <h1 id="title">Power Rankings</h1>
+  <header><h1 id="title">Power Rankings</h1><span id="updated"></span></header>
   <div class="card wrap" id="out"><div class="loading">Loading…</div></div>
 
 <div id="tip" popover="manual" role="tooltip"></div>
@@ -96,25 +98,28 @@ async function main() {
   const updated = new Date(snap.generatedAt).toLocaleString("en-US", {
     timeZone: "America/Los_Angeles", weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short",
   });
+  document.getElementById("updated").textContent = `Updated ${updated}`;
+  const projLabel = projWeek ? `Wk ${projWeek} Proj` : "Proj";
   const TIPS = {
-    rank: `Rank by power score${asOfWeek ? ` after Week ${asOfWeek}` : ""}. Rankings refresh every Wednesday at 12:00 AM Pacific; last updated ${updated}. Click any row for the score breakdown and best projected lineup.`,
+    rank: `Rank by power score${asOfWeek ? ` after Week ${asOfWeek}` : ""}. Rankings refresh every Wednesday at 12:00 AM Pacific. Click any row for the score breakdown and best projected lineup.`,
     move: prevWeek ? `Change in rank since the Week ${prevWeek} rankings.` : "Change in rank since last week's rankings. Shows up after the second weekly snapshot.",
     team: "Team name and Sleeper owner.",
     power: `0–100. Blends four inputs, each scaled so the league's best team = 1 and worst = 0. ` +
       (snap.games ? `This week: roster strength ${pct(wt.roster)}, all-play ${pct(wt.allPlay)}, points per game ${pct(wt.ppg)}, win % ${pct(wt.winPct)}. ` : "No games played yet, so this is roster strength only. ") +
+      `Roster strength is the Wk ${projWeek ?? "–"} Proj column, so this is the one score that mixes season results with next week's outlook. ` +
       "Roster weight starts at 75% and drops 7 points per game played, to a floor of 25%, because early results are noisy.",
-    record: "Actual wins and losses.",
-    allplay: "Your record if you played every team every week. Removes schedule luck.",
-    ppg: "Average points scored per game.",
-    luck: "Actual wins minus the wins expected from your all-play record. Positive means your schedule has helped you.",
-    proj: projWeek ? `Projected points for your best possible Week ${projWeek} lineup, using Sleeper projections (as of the snapshot) scored with this league's rules. Players on bye count at their season-long per-game projection.` : "No upcoming week to project.",
+    record: "Season-to-date wins and losses.",
+    allplay: "Season-to-date record if you played every team every week. Removes schedule luck.",
+    ppg: "Season-to-date average points scored per game.",
+    luck: "Season-to-date actual wins minus the wins expected from your all-play record. Positive means your schedule has helped you.",
+    proj: projWeek ? `Week ${projWeek} only — the one column about the upcoming game rather than the season so far. Projected points for your best possible Week ${projWeek} lineup, using Sleeper projections (as of the snapshot) scored with this league's rules. Players on bye count at their season-long per-game projection.` : "No upcoming week to project.",
   };
   const th = (label, key, cls = "") => `<th class="${cls}">${label}<button class="tip" data-tip="${key}" aria-label="About ${label || "this column"}">?</button></th>`;
 
   const head = `<thead><tr>
     ${th("#", "rank")}${th("", "move")}${th("Team", "team")}${th("Power", "power", "score")}
     ${th("Record", "record", "num")}${th("All-play", "allplay", "num hide-sm")}${th("PPG", "ppg", "num hide-sm")}
-    ${th("Luck", "luck", "num hide-sm")}${th("Proj", "proj", "num hide-sm")}</tr></thead>`;
+    ${th("Luck", "luck", "num hide-sm")}${th(projLabel, "proj", "num hide-sm")}</tr></thead>`;
   const body = snap.teams.map(t => {
     const d = t.prevRank == null ? null : t.prevRank - t.rank;
     const move = d == null ? "" : d > 0 ? `<span class="move up">▲${d}</span>` : d < 0 ? `<span class="move down">▼${-d}</span>` : `<span class="move same">–</span>`;
