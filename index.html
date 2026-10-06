@@ -50,6 +50,10 @@
   .comps { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 10px; font-size: 13px; color: var(--muted); }
   .comps b { color: var(--text); }
   .show-sm { display: none; }
+  #dict { margin-top: 24px; font-size: 13px; }
+  #dict td { white-space: normal; vertical-align: top; }
+  #dict .nw { white-space: nowrap; }
+  #dict td:first-child { white-space: nowrap; font-weight: 600; }
   table.parts { width: auto; margin-bottom: 14px; font-size: 13px; }
   table.parts th, table.parts td { padding: 4px 16px 4px 0; border-bottom: 1px solid var(--line); }
   table.parts th { text-transform: none; letter-spacing: 0; font-size: 12px; }
@@ -86,6 +90,7 @@
   <header><h1 id="title">Power Rankings</h1><span id="updated"></span></header>
   <div class="card wrap" id="out"><div class="loading">Loading…</div></div>
 
+<table id="dict"></table>
 <div id="tip" popover="manual" role="tooltip"></div>
 </main>
 
@@ -114,19 +119,19 @@ async function main() {
     move: "Spots moved since last week.",
     team: "Team and owner.",
     power: snap.games
-      ? `Overall score, 0–100. Mix of: Week ${wk} projection ${pct(wt.roster)}, Vs. All ${pct(wt.allPlay)}, points per game ${pct(wt.ppg)}, wins ${pct(wt.winPct)}. The projection counts less each week.`
+      ? "Overall score, 0–100. Formula is below the table."
       : `Overall score, 0–100. No games yet, so it's just the Week ${wk} projection.`,
     record: "Wins and losses.",
     allplay: "Your record if you played every team every week. 6-3 = you outscored 6 of 9 teams.",
     ppg: "Points per game.",
-    luck: "Real wins minus the wins your Vs. All record says you deserve. Plus = easy schedule.",
+    luck: "Real wins minus the wins your All-Play record says you deserve. Plus = easy schedule.",
     proj: projWeek ? `Your best lineup's projected points for Week ${wk}.` : "No game to project.",
   };
   // Points = weight × 100 × where the team sits between the league's worst (0) and best (1) on that input.
   const INPUTS = [
-    { key: "roster", label: `Week ${projWeek ?? "–"} projection`, value: t => t.proj != null ? f1(t.proj) : "—" },
-    { key: "allPlay", label: "Vs. All", value: t => `${trim0(t.apW)}-${trim0(t.apL)}` },
-    { key: "ppg", label: "Points per game", value: t => f1(t.ppg) },
+    { key: "roster", label: "Current Week Projection", value: t => t.proj != null ? f1(t.proj) : "—" },
+    { key: "allPlay", label: "All-Play", value: t => `${trim0(t.apW)}-${trim0(t.apL)}` },
+    { key: "ppg", label: "PPG", value: t => f1(t.ppg) },
     { key: "winPct", label: "Wins", value: t => `${t.w}-${t.l}${t.tie ? "-" + t.tie : ""}` },
   ];
   const ordinal = (n) => n + (["th", "st", "nd", "rd"][(n % 100 - 20) % 10] || ["th", "st", "nd", "rd"][n % 100] || "th");
@@ -135,11 +140,21 @@ async function main() {
     const tied = snap.teams.filter(o => o.comp[key] === t.comp[key]).length > 1;
     return `${tied ? "T-" : ""}${ordinal(above + 1)}`;
   };
+  const dec = (n) => n.toFixed(2).replace(/^0/, "");
+  const formula = INPUTS.filter(i => wt[i.key] > 0).map(i => `<span class="nw">(${i.label} × ${dec(wt[i.key])})</span>`).join(" + ");
+  document.getElementById("dict").innerHTML = [
+    ["Power", formula],
+    ["Current Week Projection", `Projected fantasy points for your best lineup in Week ${wk}`],
+    ["All-Play", "Record if you had played every other team, every week this season"],
+    ["PPG", "Average points per game"],
+    ["Wins", "Total real wins (not All-Play)"],
+    ["Scoring", "Each item above is scored 0–100 against the league: best team = 100, worst = 0"],
+  ].map(([k, v], i) => `<tr><td>${k}</td><td>${i ? esc(v) : v}</td></tr>`).join("");
   const th = (label, key, cls = "") => `<th class="${cls}">${label}<button class="tip" data-tip="${key}" aria-label="About ${label || "this column"}">?</button></th>`;
 
   const head = `<thead><tr>
     ${th("#", "rank")}${th("", "move")}${th("Team", "team")}${th("Power", "power", "score")}
-    ${th("Record", "record", "num")}${th("Vs. All", "allplay", "num hide-sm")}${th("PPG", "ppg", "num hide-sm")}
+    ${th("Record", "record", "num")}${th("All-Play", "allplay", "num hide-sm")}${th("PPG", "ppg", "num hide-sm")}
     ${th("Luck", "luck", "num hide-sm")}${th(projLabel, "proj", "num hide-sm")}</tr></thead>`;
   const body = snap.teams.map(t => {
     const d = t.prevRank == null ? null : t.prevRank - t.rank;
