@@ -108,26 +108,26 @@ async function main() {
   });
   document.getElementById("updated").textContent = `Updated ${updated}`;
   const projLabel = projWeek ? `Wk ${projWeek} Proj` : "Proj";
+  const wk = projWeek ?? "–";
   const TIPS = {
-    rank: `Rank by power score${asOfWeek ? ` after Week ${asOfWeek}` : ""}. Rankings refresh every Wednesday at 12:00 AM Pacific. Click any row for the score breakdown and best projected lineup.`,
-    move: prevWeek ? `Change in rank since the Week ${prevWeek} rankings.` : "Change in rank since last week's rankings. Shows up after the second weekly snapshot.",
-    team: "Team name and Sleeper owner.",
-    power: `0–100. Blends four inputs, each scaled so the league's best team = 1 and worst = 0. ` +
-      (snap.games ? `This week: roster strength ${pct(wt.roster)}, all-play ${pct(wt.allPlay)}, points per game ${pct(wt.ppg)}, win % ${pct(wt.winPct)}. ` : "No games played yet, so this is roster strength only. ") +
-      `Roster strength is the Wk ${projWeek ?? "–"} Proj column, so this is the one score that mixes season results with next week's outlook. ` +
-      "Roster weight starts at 75% and drops 7 points per game played, to a floor of 25%, because early results are noisy.",
-    record: "Season-to-date wins and losses.",
-    allplay: "Season-to-date record if you played every team every week. Removes schedule luck.",
-    ppg: "Season-to-date average points scored per game.",
-    luck: "Season-to-date actual wins minus the wins expected from your all-play record. Positive means your schedule has helped you.",
-    proj: projWeek ? `Week ${projWeek} only — the one column about the upcoming game rather than the season so far. Projected points for your best possible Week ${projWeek} lineup, using Sleeper projections (as of the snapshot) scored with this league's rules. Players on bye count at their season-long per-game projection.` : "No upcoming week to project.",
+    rank: `Updates every Wednesday at 12 AM PT. Click a team for details.`,
+    move: "Spots moved since last week.",
+    team: "Team and owner.",
+    power: snap.games
+      ? `Overall score, 0–100. Mix of: Week ${wk} projection ${pct(wt.roster)}, Vs. All ${pct(wt.allPlay)}, points per game ${pct(wt.ppg)}, wins ${pct(wt.winPct)}. The projection counts less each week.`
+      : `Overall score, 0–100. No games yet, so it's just the Week ${wk} projection.`,
+    record: "Wins and losses.",
+    allplay: "Your record if you played every team every week. 6-3 = you outscored 6 of 9 teams.",
+    ppg: "Points per game.",
+    luck: "Real wins minus the wins your Vs. All record says you deserve. Plus = easy schedule.",
+    proj: projWeek ? `Your best lineup's projected points for Week ${wk}.` : "No game to project.",
   };
   // Points = weight × 100 × where the team sits between the league's worst (0) and best (1) on that input.
   const INPUTS = [
-    { key: "roster", label: `Wk ${projWeek ?? "–"} roster proj`, value: t => t.proj != null ? f1(t.proj) : "—" },
-    { key: "allPlay", label: "All-play record", value: t => `${trim0(t.apW)}-${trim0(t.apL)}` },
+    { key: "roster", label: `Week ${projWeek ?? "–"} projection`, value: t => t.proj != null ? f1(t.proj) : "—" },
+    { key: "allPlay", label: "Vs. All", value: t => `${trim0(t.apW)}-${trim0(t.apL)}` },
     { key: "ppg", label: "Points per game", value: t => f1(t.ppg) },
-    { key: "winPct", label: "Win %", value: t => `${t.w}-${t.l}${t.tie ? "-" + t.tie : ""}` },
+    { key: "winPct", label: "Wins", value: t => `${t.w}-${t.l}${t.tie ? "-" + t.tie : ""}` },
   ];
   const ordinal = (n) => n + (["th", "st", "nd", "rd"][(n % 100 - 20) % 10] || ["th", "st", "nd", "rd"][n % 100] || "th");
   const leagueRank = (key, t) => {
@@ -139,7 +139,7 @@ async function main() {
 
   const head = `<thead><tr>
     ${th("#", "rank")}${th("", "move")}${th("Team", "team")}${th("Power", "power", "score")}
-    ${th("Record", "record", "num")}${th("All-play", "allplay", "num hide-sm")}${th("PPG", "ppg", "num hide-sm")}
+    ${th("Record", "record", "num")}${th("Vs. All", "allplay", "num hide-sm")}${th("PPG", "ppg", "num hide-sm")}
     ${th("Luck", "luck", "num hide-sm")}${th(projLabel, "proj", "num hide-sm")}</tr></thead>`;
   const body = snap.teams.map(t => {
     const d = t.prevRank == null ? null : t.prevRank - t.rank;
@@ -163,11 +163,11 @@ async function main() {
       <td class="num hide-sm">${t.proj != null ? f1(t.proj) : "—"}</td></tr>
       <tr class="detail" data-for="${t.id}" hidden><td colspan="9">
         <table class="parts">
-          <thead><tr><th>Where the ${f1(t.score)} comes from</th><th class="num">Value</th><th class="num">Rank</th><th class="num hide-sm">Weight</th><th class="num">Points</th></tr></thead>
+          <thead><tr><th>Power ${f1(t.score)} =</th><th class="num">Value</th><th class="num">Rank</th><th class="num hide-sm">Weight</th><th class="num">Points</th></tr></thead>
           <tbody>${parts}</tbody>
         </table>
         <div class="comps show-sm">Luck <b>${luck}</b></div>
-        ${t.lineup.length ? `<div class="comps"><b>Best projected lineup, Week ${projWeek}: ${f1(t.proj)} pts</b></div><div class="lineup">${lineupHtml}</div>` : ""}
+        ${t.lineup.length ? `<div class="comps"><b>Best Week ${projWeek} lineup: ${f1(t.proj)} pts</b></div><div class="lineup">${lineupHtml}</div>` : ""}
       </td></tr>`;
   }).join("");
   const out = document.getElementById("out");
