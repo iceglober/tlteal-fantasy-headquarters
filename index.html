@@ -80,249 +80,66 @@
 </main>
 
 <script>
-const DEFAULT_LEAGUE = "1407795888671207424";
-const API = "https://api.sleeper.app/v1";
-const POSITIONS = ["QB", "RB", "WR", "TE", "K", "DEF", "DL", "LB", "DB"];
-const FLEX_ELIGIBLE = {
-  FLEX: ["RB", "WR", "TE"],
-  WRRB_FLEX: ["RB", "WR"],
-  REC_FLEX: ["WR", "TE"],
-  SUPER_FLEX: ["QB", "RB", "WR", "TE"],
-  IDP_FLEX: ["DL", "LB", "DB"],
-};
-const NON_STARTING = new Set(["BN", "IR", "TAXI"]);
-const W = { allPlay: 0.45, ppg: 0.35, winPct: 0.20 };
-
-const params = new URLSearchParams(location.search);
-const LEAGUE_ID = params.get("league") || DEFAULT_LEAGUE;
-
-const getJSON = async (url) => {
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`${r.status} fetching ${url}`);
-  return r.json();
-};
-
-const projURL = (season, week) => {
-  const q = POSITIONS.map(p => `position[]=${p}`).join("&");
-  return `https://api.sleeper.app/projections/nfl/${season}${week ? "/" + week : ""}?season_type=regular&${q}`;
-};
-
-// Fantasy points under this league's scoring rules.
-function scoreStats(stats, scoring) {
-  if (!stats) return 0;
-  let pts = 0;
-  for (const [k, v] of Object.entries(scoring)) if (stats[k]) pts += stats[k] * v;
-  // Projections bucket 50+ yard FGs together; leagues may split them.
-  if (stats.fgm_50p && scoring.fgm_50p == null && scoring.fgm_50_59 != null) pts += stats.fgm_50p * scoring.fgm_50_59;
-  return pts;
-}
-
-// player_id -> { name, pos: [...], team, pts }
-function buildProjections(weekly, season, scoring) {
-  const out = {};
-  for (const p of season) {
-    const gp = p.stats?.gp || 0;
-    if (!gp) continue;
-    out[p.player_id] = playerInfo(p, scoreStats(p.stats, scoring) / gp, true);
-  }
-  for (const p of weekly) out[p.player_id] = playerInfo(p, scoreStats(p.stats, scoring), false);
-  return out;
-}
-function playerInfo(p, pts, fallback) {
-  const pl = p.player || {};
-  const name = pl.position === "DEF" ? `${pl.team || p.player_id} D/ST` : `${pl.first_name || ""} ${pl.last_name || ""}`.trim();
-  return { name, pos: pl.fantasy_positions || [pl.position], team: pl.team, pts, fallback };
-}
-
-// Fill strict slots first, then flex slots narrowest-first. Greedy is optimal for this slot shape.
-function bestLineup(playerIds, slots, proj) {
-  const pool = playerIds.map(id => ({ id, ...(proj[id] || { name: id, pos: [], pts: 0 }) }))
-    .sort((a, b) => b.pts - a.pts);
-  const used = new Set();
-  const starting = slots.filter(s => !NON_STARTING.has(s));
-  const strict = starting.filter(s => !FLEX_ELIGIBLE[s]);
-  const flex = starting.filter(s => FLEX_ELIGIBLE[s]).sort((a, b) => FLEX_ELIGIBLE[a].length - FLEX_ELIGIBLE[b].length);
-  const lineup = [];
-  for (const slot of [...strict, ...flex]) {
-    const ok = FLEX_ELIGIBLE[slot] || [slot];
-    const pick = pool.find(p => !used.has(p.id) && p.pos.some(x => ok.includes(x)));
-    if (pick) used.add(pick.id);
-    lineup.push({ slot, player: pick || null });
-  }
-  return { lineup, total: lineup.reduce((s, l) => s + (l.player?.pts || 0), 0) };
-}
-
-const norm = (vals) => {
-  const lo = Math.min(...vals), hi = Math.max(...vals);
-  return vals.map(v => (hi === lo ? 0.5 : (v - lo) / (hi - lo)));
-};
-
-// Rank teams using games in `weeks` plus projected lineups `lineups` (roster_id -> total or null).
-function computeRankings(rosterIds, weekly, weeks, lineups) {
-  const t = Object.fromEntries(rosterIds.map(id => [id, { pf: 0, w: 0, l: 0, tie: 0, apW: 0, apG: 0, g: 0 }]));
-  for (const wk of weeks) {
-    const games = weekly[wk];
-    const pts = games.map(m => m.points || 0);
-    const byMatch = {};
-    for (const m of games) (byMatch[m.matchup_id] ||= []).push(m);
-    for (const m of games) {
-      const s = t[m.roster_id];
-      if (!s) continue;
-      s.pf += m.points || 0; s.g++;
-      s.apW += pts.filter(p => p < m.points).length + 0.5 * (pts.filter(p => p === m.points).length - 1);
-      s.apG += pts.length - 1;
-      const opp = m.matchup_id != null && byMatch[m.matchup_id].find(o => o.roster_id !== m.roster_id);
-      if (opp) {
-        if (m.points > opp.points) s.w++; else if (m.points < opp.points) s.l++; else s.tie++;
-      }
-    }
-  }
-  const g = weeks.length;
-  const haveRoster = lineups && rosterIds.every(id => lineups[id] != null);
-  const rosterW = !haveRoster ? 0 : g === 0 ? 1 : Math.max(0.25, Math.min(0.75, 0.75 - 0.07 * g));
-  const rows = rosterIds.map(id => {
-    const s = t[id];
-    const games = s.w + s.l + s.tie;
-    return {
-      id, ...s,
-      ppg: s.g ? s.pf / s.g : 0,
-      apPct: s.apG ? s.apW / s.apG : 0,
-      winPct: games ? (s.w + 0.5 * s.tie) / games : 0,
-      expW: s.apG ? (s.apW / s.apG) * games : 0,
-      proj: haveRoster ? lineups[id] : null,
-    };
-  });
-  const nAp = norm(rows.map(r => r.apPct)), nPpg = norm(rows.map(r => r.ppg)), nWin = norm(rows.map(r => r.winPct));
-  const nRos = haveRoster ? norm(rows.map(r => r.proj)) : rows.map(() => 0);
-  rows.forEach((r, i) => {
-    r.comp = { allPlay: nAp[i], ppg: nPpg[i], winPct: nWin[i], roster: nRos[i] };
-    const results = W.allPlay * nAp[i] + W.ppg * nPpg[i] + W.winPct * nWin[i];
-    r.score = 100 * (g ? (1 - rosterW) * results + rosterW * nRos[i] : nRos[i]);
-  });
-  rows.sort((a, b) => b.score - a.score || b.pf - a.pf);
-  rows.forEach((r, i) => (r.rank = i + 1));
-  return { rows, rosterW, g };
-}
-
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const f1 = (n) => n.toFixed(1);
 const pct = (n) => Math.round(n * 100) + "%";
+const trim0 = (n) => f1(n).replace(/\.0$/, "");
 
 async function main() {
-  const [league, state, users, rosters] = await Promise.all([
-    getJSON(`${API}/league/${LEAGUE_ID}`),
-    getJSON(`${API}/state/nfl`),
-    getJSON(`${API}/league/${LEAGUE_ID}/users`),
-    getJSON(`${API}/league/${LEAGUE_ID}/rosters`),
-  ]);
-  const startWeek = league.settings.start_week || 1;
-  const lastRegular = (league.settings.playoff_week_start || 15) - 1;
-  const sameSeason = state.season === league.season && state.season_type === "regular";
-  const seasonOver = league.status === "complete" || (state.season > league.season) || (sameSeason === false && state.season_type === "post");
-  // Weeks strictly before Sleeper's current week are final.
-  const lastDone = seasonOver ? lastRegular : sameSeason ? Math.min(state.week - 1, lastRegular) : startWeek - 1;
-  const upcoming = !seasonOver && sameSeason && state.week <= lastRegular ? Math.max(state.week, startWeek) : null;
+  const r = await fetch(`data/latest.json?t=${Date.now()}`);
+  if (!r.ok) throw new Error(`${r.status} loading rankings`);
+  const snap = await r.json();
+  const { weights: wt, projWeek, asOfWeek, prevWeek } = snap;
 
-  const weekNums = [];
-  for (let w = startWeek; w <= lastDone; w++) weekNums.push(w);
-  const fetchWeeks = [...new Set([...weekNums, ...(upcoming ? [upcoming] : [])])];
-  const weekly = Object.fromEntries(await Promise.all(
-    fetchWeeks.map(async w => [w, await getJSON(`${API}/league/${LEAGUE_ID}/matchups/${w}`)])));
-  const done = weekNums.filter(w => weekly[w].some(m => m.points > 0));
-
-  const rosterIds = rosters.map(r => r.roster_id);
-  const userById = Object.fromEntries(users.map(u => [u.user_id, u]));
-  const rosterById = Object.fromEntries(rosters.map(r => [r.roster_id, r]));
-
-  // Roster strength: this week's projections, and last week's for the "previous rank" baseline.
-  const projWeeks = [upcoming, done.length ? done[done.length - 1] : null].filter(Boolean);
-  let proj = {}, seasonProj = [];
-  if (projWeeks.length) {
-    seasonProj = await getJSON(projURL(league.season)).catch(() => []);
-    const lists = await Promise.all(projWeeks.map(w => getJSON(projURL(league.season, w)).catch(() => [])));
-    projWeeks.forEach((w, i) => (proj[w] = buildProjections(lists[i], seasonProj, league.scoring_settings)));
-  }
-  const lineupsFor = (week, currentRoster) => {
-    if (!week || !proj[week]) return null;
-    const out = {}, detail = {};
-    for (const id of rosterIds) {
-      const r = rosterById[id];
-      const m = weekly[week]?.find(x => x.roster_id === id);
-      let ids = (currentRoster ? r.players : m?.players) || r.players || [];
-      const out_ = new Set([...(r.reserve || []), ...(r.taxi || [])]);
-      if (currentRoster) ids = ids.filter(p => !out_.has(p));
-      const best = bestLineup(ids, league.roster_positions, proj[week]);
-      out[id] = best.total; detail[id] = best.lineup;
-    }
-    return { totals: out, detail };
-  };
-
-  const nowLU = lineupsFor(upcoming, true);
-  const now = computeRankings(rosterIds, weekly, done, nowLU?.totals);
-  let prevRank = null;
-  if (done.length) {
-    const prevWeek = done[done.length - 1];
-    const prevLU = lineupsFor(prevWeek, false);
-    const prev = computeRankings(rosterIds, weekly, done.slice(0, -1), prevLU?.totals);
-    prevRank = Object.fromEntries(prev.rows.map(r => [r.id, r.rank]));
-  }
-
-  document.title = `${league.name} Power Rankings`;
-  document.getElementById("title").textContent = `${league.name} Power Rankings`;
-  const rw = now.rosterW, res = 1 - rw;
+  document.title = `${snap.league.name} Power Rankings`;
+  document.getElementById("title").textContent = `${snap.league.name} Power Rankings`;
+  const updated = new Date(snap.generatedAt).toLocaleString("en-US", {
+    timeZone: "America/Los_Angeles", weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short",
+  });
   const TIPS = {
-    rank: "Rank by power score. Click any row to see the score breakdown and best projected lineup.",
-    move: done.length ? `Change in rank since before Week ${done[done.length - 1]}.` : "Change in rank since last week.",
+    rank: `Rank by power score${asOfWeek ? ` after Week ${asOfWeek}` : ""}. Rankings refresh every Wednesday at 12:00 AM Pacific; last updated ${updated}. Click any row for the score breakdown and best projected lineup.`,
+    move: prevWeek ? `Change in rank since the Week ${prevWeek} rankings.` : "Change in rank since last week's rankings. Shows up after the second weekly snapshot.",
     team: "Team name and Sleeper owner.",
     power: `0–100. Blends four inputs, each scaled so the league's best team = 1 and worst = 0. ` +
-      (now.g ? `Right now: roster strength ${pct(rw)}, all-play ${pct(res * W.allPlay)}, points per game ${pct(res * W.ppg)}, win % ${pct(res * W.winPct)}. ` : "No games played yet, so this is roster strength only. ") +
+      (snap.games ? `This week: roster strength ${pct(wt.roster)}, all-play ${pct(wt.allPlay)}, points per game ${pct(wt.ppg)}, win % ${pct(wt.winPct)}. ` : "No games played yet, so this is roster strength only. ") +
       "Roster weight starts at 75% and drops 7 points per game played, to a floor of 25%, because early results are noisy.",
     record: "Actual wins and losses.",
     allplay: "Your record if you played every team every week. Removes schedule luck.",
     ppg: "Average points scored per game.",
     luck: "Actual wins minus the wins expected from your all-play record. Positive means your schedule has helped you.",
-    proj: upcoming ? `Projected points for your best possible Week ${upcoming} lineup, using Sleeper projections scored with this league's rules. Players on bye count at their season-long per-game projection.` : "No upcoming week to project.",
+    proj: projWeek ? `Projected points for your best possible Week ${projWeek} lineup, using Sleeper projections (as of the snapshot) scored with this league's rules. Players on bye count at their season-long per-game projection.` : "No upcoming week to project.",
   };
   const th = (label, key, cls = "") => `<th class="${cls}">${label}<button class="tip" data-tip="${key}" aria-label="About ${label || "this column"}">?</button></th>`;
-
-  const team = (id) => {
-    const r = rosterById[id], u = userById[r.owner_id] || {};
-    const name = u.metadata?.team_name || u.display_name || `Team ${id}`;
-    const avatar = u.metadata?.avatar || (u.avatar ? `https://sleepercdn.com/avatars/thumbs/${u.avatar}` : null);
-    return { name, owner: u.display_name || "Open", avatar };
-  };
 
   const head = `<thead><tr>
     ${th("#", "rank")}${th("", "move")}${th("Team", "team")}${th("Power", "power", "score")}
     ${th("Record", "record", "num")}${th("All-play", "allplay", "num hide-sm")}${th("PPG", "ppg", "num hide-sm")}
     ${th("Luck", "luck", "num hide-sm")}${th("Proj", "proj", "num hide-sm")}</tr></thead>`;
-  const body = now.rows.map(r => {
-    const tm = team(r.id);
-    const d = prevRank ? prevRank[r.id] - r.rank : 0;
-    const move = !prevRank ? "" : d > 0 ? `<span class="move up">▲${d}</span>` : d < 0 ? `<span class="move down">▼${-d}</span>` : `<span class="move same">–</span>`;
-    const luck = r.w + 0.5 * r.tie - r.expW;
-    const rec = `${r.w}-${r.l}${r.tie ? "-" + r.tie : ""}`;
-    const ap = `${f1(r.apW).replace(/\.0$/, "")}-${f1(r.apG - r.apW).replace(/\.0$/, "")}`;
-    const img = tm.avatar ? `<img src="${esc(tm.avatar)}" alt="" loading="lazy">` : `<span class="ph"></span>`;
-    const lineup = nowLU?.detail[r.id] || [];
-    const lineupHtml = lineup.map(l => `<div><span class="slot">${esc(l.slot.replace("_", " "))}</span>
-      <span class="pl">${l.player ? esc(l.player.name) + (l.player.fallback ? " (bye)" : "") : "—"}</span>
-      <span>${l.player ? f1(l.player.pts) : "0.0"}</span></div>`).join("");
-    const c = r.comp;
-    return `<tr class="team" data-id="${r.id}">
-      <td class="rank">${r.rank}</td><td class="move">${move}</td>
-      <td><div class="who">${img}<div><div class="name">${esc(tm.name)}</div>${tm.owner !== tm.name ? `<div class="owner">${esc(tm.owner)}</div>` : ""}</div></div></td>
-      <td class="score"><div class="bar"><span style="width:${r.score.toFixed(1)}%"></span><b>${f1(r.score)}</b></div></td>
-      <td class="num">${rec}</td><td class="num hide-sm">${ap}</td><td class="num hide-sm">${f1(r.ppg)}</td>
-      <td class="num hide-sm luck ${luck > 0.05 ? "pos" : luck < -0.05 ? "neg" : ""}">${luck > 0 ? "+" : ""}${f1(luck)}</td>
-      <td class="num hide-sm">${r.proj != null ? f1(r.proj) : "—"}</td></tr>
-      <tr class="detail" data-for="${r.id}" hidden><td colspan="9">
+  const body = snap.teams.map(t => {
+    const d = t.prevRank == null ? null : t.prevRank - t.rank;
+    const move = d == null ? "" : d > 0 ? `<span class="move up">▲${d}</span>` : d < 0 ? `<span class="move down">▼${-d}</span>` : `<span class="move same">–</span>`;
+    const rec = `${t.w}-${t.l}${t.tie ? "-" + t.tie : ""}`;
+    const ap = `${trim0(t.apW)}-${trim0(t.apL)}`;
+    const luck = `${t.luck > 0 ? "+" : ""}${f1(t.luck)}`;
+    const img = t.avatar ? `<img src="${esc(t.avatar)}" alt="" loading="lazy">` : `<span class="ph"></span>`;
+    const lineupHtml = t.lineup.map(l => `<div><span class="slot">${esc(l.slot.replace("_", " "))}</span>
+      <span class="pl">${l.name ? esc(l.name) + (l.bye ? " (bye)" : "") : "—"}</span>
+      <span>${f1(l.pts)}</span></div>`).join("");
+    const c = t.comp;
+    return `<tr class="team" data-id="${t.id}">
+      <td class="rank">${t.rank}</td><td class="move">${move}</td>
+      <td><div class="who">${img}<div><div class="name">${esc(t.name)}</div>${t.owner !== t.name ? `<div class="owner">${esc(t.owner)}</div>` : ""}</div></div></td>
+      <td class="score"><div class="bar"><span style="width:${t.score}%"></span><b>${f1(t.score)}</b></div></td>
+      <td class="num">${rec}</td><td class="num hide-sm">${ap}</td><td class="num hide-sm">${f1(t.ppg)}</td>
+      <td class="num hide-sm luck ${t.luck > 0 ? "pos" : t.luck < 0 ? "neg" : ""}">${luck}</td>
+      <td class="num hide-sm">${t.proj != null ? f1(t.proj) : "—"}</td></tr>
+      <tr class="detail" data-for="${t.id}" hidden><td colspan="9">
         <div class="comps">
           <span>All-play <b>${pct(c.allPlay)}</b></span><span>PPG <b>${pct(c.ppg)}</b></span>
           <span>Win % <b>${pct(c.winPct)}</b></span><span>Roster <b>${pct(c.roster)}</b></span>
-          <span>Record ${rec} · All-play ${ap} · PF ${f1(r.pf)} · Luck ${luck > 0 ? "+" : ""}${f1(luck)}</span>
+          <span>Record ${rec} · All-play ${ap} · PF ${f1(t.pf)} · Luck ${luck}</span>
         </div>
-        ${lineup.length ? `<div class="comps"><b>Best projected lineup, Week ${upcoming}: ${f1(r.proj)} pts</b></div><div class="lineup">${lineupHtml}</div>` : ""}
+        ${t.lineup.length ? `<div class="comps"><b>Best projected lineup, Week ${projWeek}: ${f1(t.proj)} pts</b></div><div class="lineup">${lineupHtml}</div>` : ""}
       </td></tr>`;
   }).join("");
   const out = document.getElementById("out");
