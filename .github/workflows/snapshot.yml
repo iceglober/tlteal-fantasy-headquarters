@@ -2,10 +2,10 @@ name: Snapshot and deploy
 
 on:
   schedule:
-    # Wednesday 12:00 AM Pacific. Cron is UTC-only: 07:00 UTC during PDT, 08:00 UTC during PST.
-    # The script skips whichever run isn't Wednesday midnight in Los Angeles.
-    - cron: "0 7 * * 3"
-    - cron: "0 8 * * 3"
+    # Thursday 12:00 AM Pacific. Cron is UTC-only: 07:00 UTC during PDT, 08:00 UTC during PST.
+    # The script skips whichever run isn't Thursday midnight in Los Angeles.
+    - cron: "0 7 * * 4"
+    - cron: "0 8 * * 4"
   workflow_dispatch:
   push:
     branches: [main]
@@ -37,6 +37,7 @@ jobs:
         run: node scripts/snapshot.mjs ${{ github.event_name == 'schedule' && '--scheduled' || '' }}
 
       - name: Commit snapshot
+        id: commit
         if: github.event_name != 'push'
         run: |
           git config user.name "github-actions[bot]"
@@ -45,10 +46,15 @@ jobs:
           if git diff --cached --quiet; then echo "No changes."; exit 0; fi
           git commit -m "Weekly power rankings snapshot"
           git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/configure-pages@v6
-      - uses: actions/upload-pages-artifact@v5
+      # Redeploy only for code pushes or a new snapshot.
+      - if: github.event_name == 'push' || steps.commit.outputs.changed == 'true'
+        uses: actions/configure-pages@v6
+      - if: github.event_name == 'push' || steps.commit.outputs.changed == 'true'
+        uses: actions/upload-pages-artifact@v5
         with:
           path: .
       - id: deploy
+        if: github.event_name == 'push' || steps.commit.outputs.changed == 'true'
         uses: actions/deploy-pages@v5

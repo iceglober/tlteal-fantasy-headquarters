@@ -1,7 +1,7 @@
 // Computes power rankings from the Sleeper API and writes data/latest.json plus a per-week history file.
 //
 //   node scripts/snapshot.mjs              write a snapshot now
-//   node scripts/snapshot.mjs --scheduled  only write if it's Wednesday in Los Angeles and
+//   node scripts/snapshot.mjs --scheduled  only write if it's Thursday in Los Angeles and
 //                                          today's scheduled snapshot hasn't been written yet
 //
 // Any failed API call throws, so a bad fetch never replaces the last good snapshot.
@@ -146,8 +146,8 @@ async function main() {
   const now = new Date();
   const today = laDate(now);
   if (scheduled) {
-    // Cron fires at 07:00 and 08:00 UTC Wednesday; exactly one of those is midnight Pacific, DST or not.
-    if (laWeekday(now) !== "Wed") return console.log(`Not Wednesday in ${TZ}; skipping.`);
+    // Cron fires at 07:00 and 08:00 UTC Thursday; exactly one of those is midnight Pacific, DST or not.
+    if (laWeekday(now) !== "Thu") return console.log(`Not Thursday in ${TZ}; skipping.`);
     const latest = join(DATA, "latest.json");
     if (existsSync(latest) && readJSON(latest).scheduledFor === today) return console.log(`Snapshot for ${today} exists; skipping.`);
   }
