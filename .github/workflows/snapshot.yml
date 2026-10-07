@@ -2,10 +2,11 @@ name: Snapshot and deploy
 
 on:
   schedule:
-    # Thursday 12:00 AM Pacific. Cron is UTC-only: 07:00 UTC during PDT, 08:00 UTC during PST.
-    # The script skips whichever run isn't Thursday midnight in Los Angeles.
-    - cron: "0 7 * * 4"
-    - cron: "0 8 * * 4"
+    # Thursday 12:07 AM Pacific. Cron is UTC-only: 07:07 UTC during PDT, 08:07 UTC during PST.
+    # The script skips whichever run isn't Thursday in Los Angeles or finds today's snapshot already taken.
+    # Off the top of the hour because GitHub delays top-of-hour scheduled runs the most.
+    - cron: "7 7 * * 4"
+    - cron: "7 8 * * 4"
   workflow_dispatch:
   push:
     branches: [main]

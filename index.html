@@ -123,12 +123,10 @@ async function main() {
   const projLabel = projWeek ? `Wk ${projWeek} Proj` : "Proj";
   const wk = projWeek ?? "–";
   const TIPS = {
-    rank: `Updates every Thursday at 12 AM PT. Click a team for details.`,
+    rank: `Updates every Thursday around 12 AM PT. Click a team for details.`,
     move: "Spots moved since last week.",
     team: "Team and owner.",
-    power: snap.games
-      ? "Overall score, 0–100. Formula is below the table."
-      : `Overall score, 0–100. No games yet, so it's just the Week ${wk} projection.`,
+    power: "Overall score, 0–100. Formula is below the table.",
     record: "Wins and losses.",
     allplay: "Your record if you played every team every week. 6-3 = you outscored 6 of 9 teams.",
     ppg: "Points per game.",

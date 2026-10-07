@@ -24,7 +24,8 @@ const FLEX_ELIGIBLE = {
   IDP_FLEX: ["DL", "LB", "DB"],
 };
 const NON_STARTING = new Set(["BN", "IR", "TAXI"]);
-const W = { allPlay: 0.45, ppg: 0.35, winPct: 0.20 };
+// Fixed all season. Must sum to 1.
+const W = { roster: 0.30, allPlay: 0.30, ppg: 0.25, winPct: 0.15 };
 
 const getJSON = async (url) => {
   const r = await fetch(url);
@@ -110,7 +111,6 @@ function computeRankings(rosterIds, weekly, weeks, lineups) {
   }
   const g = weeks.length;
   const haveRoster = lineups && rosterIds.every(id => lineups[id] != null);
-  const rosterW = !haveRoster ? 0 : g === 0 ? 1 : Math.max(0.25, Math.min(0.75, 0.75 - 0.07 * g));
   const rows = rosterIds.map(id => {
     const s = t[id];
     const games = s.w + s.l + s.tie;
@@ -127,12 +127,11 @@ function computeRankings(rosterIds, weekly, weeks, lineups) {
   const nRos = haveRoster ? norm(rows.map(r => r.proj)) : rows.map(() => 0);
   rows.forEach((r, i) => {
     r.comp = { allPlay: nAp[i], ppg: nPpg[i], winPct: nWin[i], roster: nRos[i] };
-    const results = W.allPlay * nAp[i] + W.ppg * nPpg[i] + W.winPct * nWin[i];
-    r.score = 100 * (g ? (1 - rosterW) * results + rosterW * nRos[i] : nRos[i]);
+    r.score = 100 * (W.roster * nRos[i] + W.allPlay * nAp[i] + W.ppg * nPpg[i] + W.winPct * nWin[i]);
   });
   rows.sort((a, b) => b.score - a.score || b.pf - a.pf);
   rows.forEach((r, i) => (r.rank = i + 1));
-  return { rows, rosterW, g };
+  return { rows, g };
 }
 
 const laDate = (d) => new Intl.DateTimeFormat("en-CA", { timeZone: TZ }).format(d); // YYYY-MM-DD
@@ -231,10 +230,10 @@ async function main() {
     prevWeek: prevFile?.asOfWeek ?? null,
     games: ranked.g,
     weights: {
-      roster: r3(ranked.rosterW),
-      allPlay: r3((1 - ranked.rosterW) * W.allPlay),
-      ppg: r3((1 - ranked.rosterW) * W.ppg),
-      winPct: r3((1 - ranked.rosterW) * W.winPct),
+      roster: W.roster,
+      allPlay: W.allPlay,
+      ppg: W.ppg,
+      winPct: W.winPct,
     },
     teams,
   };
