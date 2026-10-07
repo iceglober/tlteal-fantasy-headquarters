@@ -148,7 +148,8 @@ async function main() {
     ["All-Play", "Record if you had played every other team, every week this season"],
     ["PPG", "Average points per game"],
     ["Wins", "Total real wins (not All-Play)"],
-    ["Scoring", "Each item above is scored 0–100 against the league: best team = 100, worst = 0"],
+    ["Scoring", "Each Power item is scored 0–100 against the league: best team = 100, worst = 0"],
+    ["Luck", "Wins minus expected wins from All-Play (e.g. 1 game at 6-3 All-Play = 0.67 expected). Plus = lucky schedule. Not part of Power"],
   ].map(([k, v], i) => `<tr><td>${k}</td><td>${i ? esc(v) : v}</td></tr>`).join("");
   const th = (label, key, cls = "") => `<th class="${cls}">${label}<button class="tip" data-tip="${key}" aria-label="About ${label || "this column"}">?</button></th>`;
 
