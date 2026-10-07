@@ -55,11 +55,12 @@
   #dict .nw { white-space: nowrap; }
   #dict td:first-child { white-space: nowrap; font-weight: 600; }
   table.parts { width: auto; margin-bottom: 14px; font-size: 13px; }
+  table.parts td.num { white-space: nowrap; }
   table.parts th, table.parts td { padding: 4px 16px 4px 0; border-bottom: 1px solid var(--line); }
   table.parts th { text-transform: none; letter-spacing: 0; font-size: 12px; }
   table.parts td.num, table.parts th.num { padding-left: 12px; }
   .wrap { overflow-x: auto; }
-  button.tip { margin-left: 4px; width: 16px; height: 16px; padding: 0; border-radius: 50%;
+  button.tip { position: relative; margin-left: 4px; width: 16px; height: 16px; padding: 0; border-radius: 50%;
     border: 1px solid var(--muted); background: none; color: var(--muted); font-family: inherit; font-size: 10px; font-weight: 600; line-height: 14px;
     cursor: pointer; vertical-align: 1px; }
   button.tip:hover, button.tip:focus-visible { color: var(--accent); border-color: var(--accent); }
@@ -69,7 +70,14 @@
     box-shadow: 0 6px 24px rgb(0 0 0 / .18); }
   .err { padding: 24px; color: var(--down); }
   .loading { padding: 24px; color: var(--muted); }
+  /* Bigger tap area than the visible circle. */
+  button.tip::after { content: ""; position: absolute; inset: -8px; }
+  .rec-sm { display: none; }
   @media (max-width: 640px) {
+    .rec-sm { display: inline; color: var(--text); font-weight: 600; }
+    #dict td { display: block; border: 0; padding: 2px 0; }
+    #dict tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--line); }
+    #dict .nw { white-space: normal; }
     .hide-sm { display: none; }
     .show-sm { display: flex; }
     table.parts th, table.parts td { padding-right: 6px; }
@@ -155,7 +163,7 @@ async function main() {
 
   const head = `<thead><tr>
     ${th("#", "rank")}${th("", "move")}${th("Team", "team")}${th("Power", "power", "score")}
-    ${th("Record", "record", "num")}${th("All-Play", "allplay", "num hide-sm")}${th("PPG", "ppg", "num hide-sm")}
+    ${th("Record", "record", "num hide-sm")}${th("All-Play", "allplay", "num hide-sm")}${th("PPG", "ppg", "num hide-sm")}
     ${th("Luck", "luck", "num hide-sm")}${th(projLabel, "proj", "num hide-sm")}</tr></thead>`;
   const body = snap.teams.map(t => {
     const d = t.prevRank == null ? null : t.prevRank - t.rank;
@@ -172,9 +180,9 @@ async function main() {
       <td class="num hide-sm">${pct(wt[i.key])}</td><td class="num"><b>${f1(100 * wt[i.key] * t.comp[i.key])}</b></td></tr>`).join("");
     return `<tr class="team" data-id="${t.id}">
       <td class="rank">${t.rank}</td><td class="move">${move}</td>
-      <td><div class="who">${img}<div><div class="name">${esc(t.name)}</div>${t.owner !== t.name ? `<div class="owner">${esc(t.owner)}</div>` : ""}</div></div></td>
+      <td><div class="who">${img}<div><div class="name">${esc(t.name)}</div><div class="owner"><span class="rec-sm">${rec}${t.owner !== t.name ? " · " : ""}</span>${t.owner !== t.name ? esc(t.owner) : ""}</div></div></div></td>
       <td class="score"><div class="bar"><span style="width:${t.score}%"></span><b>${f1(t.score)}</b></div></td>
-      <td class="num">${rec}</td><td class="num hide-sm">${ap}</td><td class="num hide-sm">${f1(t.ppg)}</td>
+      <td class="num hide-sm">${rec}</td><td class="num hide-sm">${ap}</td><td class="num hide-sm">${f1(t.ppg)}</td>
       <td class="num hide-sm luck ${t.luck > 0 ? "pos" : t.luck < 0 ? "neg" : ""}">${luck}</td>
       <td class="num hide-sm">${t.proj != null ? f1(t.proj) : "—"}</td></tr>
       <tr class="detail" data-for="${t.id}" hidden><td colspan="9">
