@@ -49,10 +49,10 @@
   .lineup .pl { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .comps { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 10px; font-size: 13px; color: var(--muted); }
   .comps b { color: var(--text); }
-  .show-sm { display: none; }
+  .show-sm, .show-sm-inline { display: none; }
   #dict { margin-top: 24px; font-size: 13px; }
-  #injury h2 { font-size: 18px; margin: 28px 0 10px; }
-  #injury td:last-child { white-space: normal; color: var(--muted); font-size: 13px; }
+  #report h2 { font-size: 18px; margin: 28px 0 10px; }
+  #report td:last-child { white-space: normal; color: var(--muted); font-size: 13px; }
   .status { font-weight: 700; }
   .status.Active { color: var(--up); } .status.Questionable { color: var(--warn); } .status.Doubtful { color: var(--down); }
   #dict td { white-space: normal; vertical-align: top; }
@@ -79,14 +79,16 @@
   .rec-sm { display: none; }
   @media (max-width: 640px) {
     .rec-sm { display: inline; color: var(--text); font-weight: 600; }
-    #injury tr { display: grid; grid-template-columns: 1fr auto; border-bottom: 1px solid var(--line); }
-    #injury td { border: 0; padding: 8px 12px 2px; }
-    #injury td:last-child { grid-column: 1 / -1; padding: 0 12px 8px; }
+    #report thead { display: none; }
+    #report tr { display: grid; grid-template-columns: 1fr auto; border-bottom: 1px solid var(--line); }
+    #report td { border: 0; padding: 8px 12px 2px; }
+    #report td:last-child { grid-column: 1 / -1; padding: 0 12px 8px; }
     #dict td { display: block; border: 0; padding: 2px 0; }
     #dict tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--line); }
     #dict .nw { white-space: normal; }
     .hide-sm { display: none; }
     .show-sm { display: flex; }
+    .show-sm-inline { display: inline; color: var(--text); }
     table.parts th, table.parts td { padding-right: 6px; }
     table.parts td.num, table.parts th.num { padding-left: 6px; }
     th, td { padding: 8px 4px; }
@@ -105,7 +107,7 @@
   <header><h1 id="title">Power Rankings</h1><span id="updated"></span></header>
   <div class="card wrap" id="out"><div class="loading">Loading…</div></div>
 
-<section id="injury" hidden><h2>Injury Report</h2><div class="card"><table id="injury-table"></table></div></section>
+<section id="report" hidden><h2>Manager Report</h2><div class="card"><table id="report-table"></table></div></section>
 <table id="dict"></table>
 <div id="tip" popover="manual" role="tooltip"></div>
 </main>
@@ -139,6 +141,8 @@ async function main() {
     allplay: "Your record if you played every team every week. 6-3 = you outscored 6 of 9 teams.",
     ppg: "Points per game.",
     luck: "Real wins minus the wins your All-Play record says you deserve. Plus = easy schedule.",
+    status: "Is this manager still running their team? Judgment calls don't count, only missed byes, injuries, and obvious blunders.",
+    strikes: "Strikes in the last 4 weeks. See definitions below.",
     proj: projWeek ? `Your best lineup's projected points for Week ${wk}.` : "No game to project.",
   };
   // Points = weight × 100 × where the team sits between the league's worst (0) and best (1) on that input.
@@ -156,20 +160,24 @@ async function main() {
   };
   const dec = (n) => n.toFixed(2).replace(/^0/, "");
   const formula = INPUTS.filter(i => wt[i.key] > 0).map(i => `<span class="nw">(${i.label} × ${dec(wt[i.key])})</span>`).join(" + ");
+  const th = (label, key, cls = "") => `<th class="${cls}">${label}<button class="tip" data-tip="${key}" aria-label="About ${label || "this column"}">?</button></th>`;
   const SEVERITY = { Doubtful: 0, Questionable: 1, Active: 2 };
-  const report = snap.teams.filter(t => t.engagement)
+  const report = snap.teams.filter(t => t.engagement?.byWeek)
     .sort((a, b) => SEVERITY[a.engagement.status] - SEVERITY[b.engagement.status] || a.rank - b.rank);
   if (report.length) {
-    document.getElementById("injury-table").innerHTML = report.map(t => {
+    const rows = report.map(t => {
       const e = t.engagement;
-      const notes = [
-        `Last active Wk ${e.lastActive}`,
-        e.accuracy != null ? `Lineup accuracy ${pct(e.accuracy)}` : null,
-        ...e.dead.map(d => `Started ${d.name} (${d.why}, Wk ${d.week})`),
-      ].filter(Boolean).join(" · ");
-      return `<tr><td>${esc(t.name)}</td><td class="status ${e.status}">${e.status}</td><td>${esc(notes)}</td></tr>`;
+      const trend = e.byWeek.length > 1
+        ? `Strikes by week: ${e.byWeek.map(x => x.strikes).join(" · ")} · Season: ${e.season} in ${e.byWeek.length} weeks`
+        : null;
+      const strikesSm = `<span class="show-sm-inline">${e.strikes} strike${e.strikes === 1 ? "" : "s"}${e.reasons.length || trend ? " · " : ""}</span>`;
+      const notes = [...e.reasons, trend].filter(Boolean).map(esc).join(" · ");
+      return `<tr><td>${esc(t.name)}</td><td class="status ${e.status}">${e.status}</td>
+        <td class="num hide-sm">${e.strikes}</td><td>${strikesSm}${notes}</td></tr>`;
     }).join("");
-    document.getElementById("injury").hidden = false;
+    document.getElementById("report-table").innerHTML =
+      `<thead><tr><th>Team</th>${th("Status", "status")}${th("Strikes", "strikes", "num")}<th>Notes</th></tr></thead><tbody>${rows}</tbody>`;
+    document.getElementById("report").hidden = false;
   }
   document.getElementById("dict").innerHTML = [
     ["Power", formula],
@@ -179,13 +187,11 @@ async function main() {
     ["Wins", "Total real wins (not All-Play)"],
     ["Scoring", "Each Power item is scored 0–100 against the league: best team = 100, worst = 0"],
     ["Luck", "Wins minus expected wins from All-Play (e.g. 1 game at 6-3 All-Play = 0.67 expected). Plus = lucky schedule. Not part of Power"],
-    ["Active", "Managing their team"],
-    ["Questionable", "No lineup change or roster move in 2 weeks, or started a player on bye / ruled out in the last 3 weeks, or lineup accuracy under 80%"],
-    ["Doubtful", "No lineup change or roster move in 3+ weeks, or started players on bye / ruled out in 2 of the last 3 weeks"],
-    ["Lineup accuracy", "Points scored ÷ points your best possible lineup would have scored, last 3 weeks"],
+    ["Strike", "Started a player on bye or ruled out, left a slot empty, benched someone projected 10+ points better, or went 3 weeks without touching lineup or roster"],
+    ["Active", "0 strikes in the last 4 weeks"],
+    ["Questionable", "1 strike in the last 4 weeks"],
+    ["Doubtful", "2+ strikes in the last 4 weeks"],
   ].map(([k, v], i) => `<tr><td>${k}</td><td>${i ? esc(v) : v}</td></tr>`).join("");
-  const th = (label, key, cls = "") => `<th class="${cls}">${label}<button class="tip" data-tip="${key}" aria-label="About ${label || "this column"}">?</button></th>`;
-
   const head = `<thead><tr>
     ${th("#", "rank")}${th("", "move")}${th("Team", "team")}${th("Power", "power", "score")}
     ${th("Record", "record", "num hide-sm")}${th("All-Play", "allplay", "num hide-sm")}${th("PPG", "ppg", "num hide-sm")}
@@ -223,25 +229,24 @@ async function main() {
   out.innerHTML = `<table>${head}<tbody>${body}</tbody></table>`;
   const tip = document.getElementById("tip");
   const hideTip = () => tip.matches(":popover-open") && tip.hidePopover();
-  document.addEventListener("click", (e) => { if (!e.target.closest("#tip, button.tip")) hideTip(); });
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("button.tip");
+    if (!btn) { if (!e.target.closest("#tip")) hideTip(); return; }
+    const same = tip.matches(":popover-open") && tip.dataset.key === btn.dataset.tip;
+    hideTip();
+    if (same) return;
+    tip.dataset.key = btn.dataset.tip;
+    tip.textContent = TIPS[btn.dataset.tip];
+    tip.showPopover();
+    const b = btn.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
+    const left = Math.max(8, Math.min(b.left + b.width / 2 - w / 2, innerWidth - w - 8));
+    const top = b.bottom + 6 + h > innerHeight - 8 ? b.top - h - 6 : b.bottom + 6;
+    tip.style.left = `${left}px`; tip.style.top = `${top}px`;
+  });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") hideTip(); });
   addEventListener("scroll", hideTip, true);
   out.addEventListener("click", (e) => {
-    const btn = e.target.closest("button.tip");
-    if (btn) {
-      e.stopPropagation();
-      const same = tip.matches(":popover-open") && tip.dataset.key === btn.dataset.tip;
-      hideTip();
-      if (same) return;
-      tip.dataset.key = btn.dataset.tip;
-      tip.textContent = TIPS[btn.dataset.tip];
-      tip.showPopover();
-      const b = btn.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
-      const left = Math.max(8, Math.min(b.left + b.width / 2 - w / 2, innerWidth - w - 8));
-      const top = b.bottom + 6 + h > innerHeight - 8 ? b.top - h - 6 : b.bottom + 6;
-      tip.style.left = `${left}px`; tip.style.top = `${top}px`;
-      return;
-    }
+    if (e.target.closest("button.tip")) return;
     const tr = e.target.closest("tr.team");
     if (!tr) return;
     const d = out.querySelector(`tr.detail[data-for="${tr.dataset.id}"]`);

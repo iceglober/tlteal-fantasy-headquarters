@@ -4,7 +4,7 @@
 //   node scripts/snapshot.mjs --scheduled  only write if it's Thursday in Los Angeles and
 //                                          today's scheduled snapshot hasn't been written yet
 //
-//   node scripts/snapshot.mjs --engagement-only  refresh only the injury report in the latest snapshot,
+//   node scripts/snapshot.mjs --report-only      refresh only the manager report in the latest snapshot,
 //                                               leaving rankings untouched
 //
 // Any failed API call throws, so a bad fetch never replaces the last good snapshot.
@@ -137,50 +137,73 @@ function computeRankings(rosterIds, weekly, weeks, lineups) {
   return { rows, g };
 }
 
-// Injury report: is each manager still running their team? Looks at the last ENGAGE_WINDOW completed weeks.
-const ENGAGE_WINDOW = 3;
-const ACCURACY_FLOOR = 0.80;
+// Manager report: is each manager still running their team? Judgment calls don't count; only neglect does.
+// A week earns at most one strike of each kind:
+//   dead     started a player on bye or ruled out before kickoff, or left a slot empty
+//   blunder  benched a player projected BLUNDER_GAP+ points better than a starter they could have replaced
+//   idle     no lineup change or roster move for IDLE_WEEKS straight weeks (one strike per streak)
+const REPORT_WINDOW = 4;
+const BLUNDER_GAP = 10;
+const IDLE_WEEKS = 3;
 
-function computeEngagement({ rosterIds, weekly, done, upcoming, startWeek, asOfWeek, slots, txns, pastProj, names }) {
-  const recent = done.slice(-ENGAGE_WINDOW);
-  const sameStarters = (w, id) => {
-    const a = weekly[w]?.find(m => m.roster_id === id), b = weekly[w - 1]?.find(m => m.roster_id === id);
-    return !a || !b || JSON.stringify(a.starters) === JSON.stringify(b.starters);
-  };
+function computeManagerReport({ rosterIds, weekly, done, upcoming, startWeek, slots, txns, pastProj, names, scoring }) {
+  const startSlots = slots.filter(sl => !NON_STARTING.has(sl));
+  const projected = (w, pid) => pastProj[w][pid]?.stats?.gp > 0;
+  const projPts = (w, pid) => (projected(w, pid) ? scoreStats(pastProj[w][pid].stats, scoring) : 0);
+  const posOf = (w, pid) => pastProj[w][pid]?.player?.fantasy_positions || names.pos[pid] || [];
+  const window = done.slice(-REPORT_WINDOW);
   const out = {};
   for (const id of rosterIds) {
-    // Weeks the manager did something: changed starters from the week before, or made a roster move.
-    // The first week counts, since they drafted and set a lineup.
-    const active = new Set([startWeek]);
-    for (const w of [...done, upcoming].filter(w => w && w > startWeek)) if (!sameStarters(w, id)) active.add(w);
-    for (const t of txns) if (t.status === "complete" && t.roster_ids?.includes(id)) active.add(t.leg);
-    const lastActive = Math.max(...active);
-    const idleWeeks = Math.max(0, (asOfWeek ?? startWeek) - lastActive);
+    const strikes = Object.fromEntries(done.map(w => [w, []]));
 
-    // Dead starter: empty slot, or no projection that week (bye or ruled out before kickoff) and scored 0.
-    // A healthy player who just scored 0 doesn't count.
-    const dead = [];
-    let actual = 0, optimal = 0;
-    for (const w of recent) {
+    for (const w of done) {
       const m = weekly[w].find(x => x.roster_id === id);
       if (!m) continue;
-      m.starters.forEach((pid, i) => {
-        if (!pid || pid === "0") dead.push({ week: w, name: "nobody", why: "empty slot" });
-        else if (!(pastProj[w][pid]?.stats?.gp > 0) && !m.starters_points[i]) dead.push({ week: w, name: names[pid] || pid, why: pastProj[w][pid] ? "ruled out" : "bye" });
+      const starters = m.starters || [];
+      // Dead starters: no projection that week and scored 0. A healthy player who just scored 0 doesn't count.
+      const dead = [];
+      starters.forEach((pid, i) => {
+        if (!pid || pid === "0") dead.push({ kind: "dead", text: `Left a slot empty (Wk ${w})` });
+        else if (!projected(w, pid) && !m.starters_points[i]) dead.push({ kind: "dead", text: `Started ${names[pid] || pid} (${pastProj[w][pid] ? "ruled out" : "bye"}, Wk ${w})` });
       });
-      // Lineup accuracy: actual points vs. the best lineup in hindsight from the same roster.
-      const pts = Object.fromEntries((m.players || []).map(pid => [pid, {
-        name: names[pid] || pid, pos: pastProj[w][pid]?.player?.fantasy_positions || names.pos[pid] || [], pts: m.players_points?.[pid] || 0,
-      }]));
-      actual += m.points || 0;
-      optimal += bestLineup(m.players || [], slots, pts).total;
+      if (dead.length) strikes[w].push(...dead);
+      // Blunder: the single worst bench-over-starter gap, if it clears BLUNDER_GAP.
+      const bench = (m.players || []).filter(pid => !starters.includes(pid) && projected(w, pid));
+      let worst = null;
+      starters.forEach((pid, i) => {
+        if (!projected(w, pid)) return; // already counted as dead
+        const ok = FLEX_ELIGIBLE[startSlots[i]] || [startSlots[i]];
+        for (const b of bench) {
+          const gap = projPts(w, b) - projPts(w, pid);
+          if (gap >= BLUNDER_GAP && posOf(w, b).some(x => ok.includes(x)) && (!worst || gap > worst.gap)) worst = { gap, b, pid };
+        }
+      });
+      if (worst) strikes[w].push({ kind: "blunder", text: `Started ${names[worst.pid] || worst.pid} over ${names[worst.b] || worst.b} (${Math.round(worst.gap)} pts worse projected, Wk ${w})` });
     }
-    const accuracy = optimal ? actual / optimal : null;
-    const deadWeeks = new Set(dead.map(d => d.week)).size;
-    const status = idleWeeks >= 3 || deadWeeks >= 2 ? "Doubtful"
-      : idleWeeks === 2 || deadWeeks === 1 || (accuracy != null && accuracy < ACCURACY_FLOOR) ? "Questionable"
-      : "Active";
-    out[id] = { status, lastActive, idleWeeks, accuracy: accuracy == null ? null : r3(accuracy), dead, window: recent };
+
+    // Idle: weeks with no starter change and no roster move. The first week counts as activity (draft + first lineup).
+    const activeWeeks = new Set([startWeek]);
+    const sameStarters = (w) => {
+      const a = weekly[w]?.find(m => m.roster_id === id), b = weekly[w - 1]?.find(m => m.roster_id === id);
+      return !a || !b || JSON.stringify(a.starters) === JSON.stringify(b.starters);
+    };
+    for (const w of [...done, upcoming].filter(w => w && w > startWeek)) if (!sameStarters(w)) activeWeeks.add(w);
+    for (const t of txns) if (t.status === "complete" && t.roster_ids?.includes(id)) activeWeeks.add(t.leg);
+    let idle = 0;
+    for (const w of done) {
+      idle = activeWeeks.has(w) ? 0 : idle + 1;
+      if (idle === IDLE_WEEKS) { strikes[w].push({ kind: "idle", text: `No lineup change or roster move for ${IDLE_WEEKS} weeks (Wk ${w})` }); idle = 0; }
+    }
+
+    const count = (ws) => ws.reduce((n, w) => n + new Set(strikes[w].map(x => x.kind)).size, 0);
+    const recent = count(window);
+    out[id] = {
+      status: recent === 0 ? "Active" : recent === 1 ? "Questionable" : "Doubtful",
+      strikes: recent,
+      reasons: window.flatMap(w => strikes[w].map(x => x.text)),
+      byWeek: done.map(w => ({ week: w, strikes: count([w]) })),
+      season: count(done),
+    };
   }
   return out;
 }
@@ -234,27 +257,26 @@ async function main() {
     names[p.player_id] = playerInfo(p, 0, false).name;
     names.pos[p.player_id] = p.player?.fantasy_positions || [p.player?.position];
   }
-  const recent = done.slice(-ENGAGE_WINDOW);
   const txWeeks = [];
   for (let w = 1; w <= (upcoming ?? lastDone); w++) txWeeks.push(w);
   const [pastProjLists, txnLists] = await Promise.all([
-    Promise.all(recent.map(w => getJSON(projURL(league.season, w)))),
+    Promise.all(done.map(w => getJSON(projURL(league.season, w)))),
     Promise.all(txWeeks.map(w => getJSON(`${API}/league/${LEAGUE_ID}/transactions/${w}`))),
   ]);
-  const pastProj = Object.fromEntries(recent.map((w, i) => [w, Object.fromEntries(pastProjLists[i].map(p => [p.player_id, p]))]));
-  const engagement = computeEngagement({
-    rosterIds, weekly, done, upcoming, startWeek, asOfWeek, slots: league.roster_positions,
-    txns: txnLists.flat(), pastProj, names,
+  const pastProj = Object.fromEntries(done.map((w, i) => [w, Object.fromEntries(pastProjLists[i].map(p => [p.player_id, p]))]));
+  const engagement = computeManagerReport({
+    rosterIds, weekly, done, upcoming, startWeek, slots: league.roster_positions,
+    txns: txnLists.flat(), pastProj, names, scoring: league.scoring_settings,
   });
 
-  if (process.argv.includes("--engagement-only")) {
+  if (process.argv.includes("--report-only")) {
     const latest = readJSON(join(DATA, "latest.json"));
     if (latest.asOfWeek !== asOfWeek) throw new Error(`Latest snapshot is after week ${latest.asOfWeek}, not ${asOfWeek}; run a full snapshot.`);
     for (const t of latest.teams) t.engagement = engagement[t.id];
     const body = JSON.stringify(latest, null, 2) + "\n";
     writeFileSync(join(DATA, "latest.json"), body);
     writeFileSync(join(HISTORY, `${league.season}-week-${String(asOfWeek ?? 0).padStart(2, "0")}.json`), body);
-    return console.log("Updated injury report in latest snapshot.");
+    return console.log("Updated manager report in latest snapshot.");
   }
 
   let lineups = null;

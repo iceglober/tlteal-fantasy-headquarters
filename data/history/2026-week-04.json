@@ -128,13 +128,15 @@
       ],
       "engagement": {
         "status": "Active",
-        "lastActive": 5,
-        "idleWeeks": 0,
-        "accuracy": 0.976,
-        "dead": [],
-        "window": [
-          4
-        ]
+        "strikes": 0,
+        "reasons": [],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          }
+        ],
+        "season": 0
       }
     },
     {
@@ -248,19 +250,17 @@
       ],
       "engagement": {
         "status": "Questionable",
-        "lastActive": 5,
-        "idleWeeks": 0,
-        "accuracy": 0.902,
-        "dead": [
+        "strikes": 1,
+        "reasons": [
+          "Started Ladd McConkey (ruled out, Wk 4)"
+        ],
+        "byWeek": [
           {
             "week": 4,
-            "name": "Ladd McConkey",
-            "why": "ruled out"
+            "strikes": 1
           }
         ],
-        "window": [
-          4
-        ]
+        "season": 1
       }
     },
     {
@@ -374,13 +374,15 @@
       ],
       "engagement": {
         "status": "Active",
-        "lastActive": 5,
-        "idleWeeks": 0,
-        "accuracy": 0.878,
-        "dead": [],
-        "window": [
-          4
-        ]
+        "strikes": 0,
+        "reasons": [],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          }
+        ],
+        "season": 0
       }
     },
     {
@@ -494,13 +496,15 @@
       ],
       "engagement": {
         "status": "Active",
-        "lastActive": 5,
-        "idleWeeks": 0,
-        "accuracy": 0.937,
-        "dead": [],
-        "window": [
-          4
-        ]
+        "strikes": 0,
+        "reasons": [],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          }
+        ],
+        "season": 0
       }
     },
     {
@@ -614,13 +618,15 @@
       ],
       "engagement": {
         "status": "Active",
-        "lastActive": 5,
-        "idleWeeks": 0,
-        "accuracy": 0.948,
-        "dead": [],
-        "window": [
-          4
-        ]
+        "strikes": 0,
+        "reasons": [],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          }
+        ],
+        "season": 0
       }
     },
     {
@@ -734,13 +740,15 @@
       ],
       "engagement": {
         "status": "Active",
-        "lastActive": 5,
-        "idleWeeks": 0,
-        "accuracy": 0.898,
-        "dead": [],
-        "window": [
-          4
-        ]
+        "strikes": 0,
+        "reasons": [],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          }
+        ],
+        "season": 0
       }
     },
     {
@@ -854,19 +862,17 @@
       ],
       "engagement": {
         "status": "Questionable",
-        "lastActive": 5,
-        "idleWeeks": 0,
-        "accuracy": 0.95,
-        "dead": [
+        "strikes": 1,
+        "reasons": [
+          "Started Zack Baun (ruled out, Wk 4)"
+        ],
+        "byWeek": [
           {
             "week": 4,
-            "name": "Zack Baun",
-            "why": "ruled out"
+            "strikes": 1
           }
         ],
-        "window": [
-          4
-        ]
+        "season": 1
       }
     },
     {
@@ -980,13 +986,15 @@
       ],
       "engagement": {
         "status": "Active",
-        "lastActive": 5,
-        "idleWeeks": 0,
-        "accuracy": 0.907,
-        "dead": [],
-        "window": [
-          4
-        ]
+        "strikes": 0,
+        "reasons": [],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          }
+        ],
+        "season": 0
       }
     },
     {
@@ -1100,13 +1108,15 @@
       ],
       "engagement": {
         "status": "Active",
-        "lastActive": 4,
-        "idleWeeks": 0,
-        "accuracy": 0.917,
-        "dead": [],
-        "window": [
-          4
-        ]
+        "strikes": 0,
+        "reasons": [],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          }
+        ],
+        "season": 0
       }
     },
     {
@@ -1219,14 +1229,16 @@
         }
       ],
       "engagement": {
-        "status": "Questionable",
-        "lastActive": 5,
-        "idleWeeks": 0,
-        "accuracy": 0.727,
-        "dead": [],
-        "window": [
-          4
-        ]
+        "status": "Active",
+        "strikes": 0,
+        "reasons": [],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          }
+        ],
+        "season": 0
       }
     }
   ]
