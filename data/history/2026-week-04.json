@@ -125,7 +125,17 @@
           "pts": 6.4,
           "bye": false
         }
-      ]
+      ],
+      "engagement": {
+        "status": "Active",
+        "lastActive": 5,
+        "idleWeeks": 0,
+        "accuracy": 0.976,
+        "dead": [],
+        "window": [
+          4
+        ]
+      }
     },
     {
       "id": 6,
@@ -235,7 +245,23 @@
           "pts": 7.7,
           "bye": false
         }
-      ]
+      ],
+      "engagement": {
+        "status": "Questionable",
+        "lastActive": 5,
+        "idleWeeks": 0,
+        "accuracy": 0.902,
+        "dead": [
+          {
+            "week": 4,
+            "name": "Ladd McConkey",
+            "why": "ruled out"
+          }
+        ],
+        "window": [
+          4
+        ]
+      }
     },
     {
       "id": 10,
@@ -345,7 +371,17 @@
           "pts": 6.5,
           "bye": false
         }
-      ]
+      ],
+      "engagement": {
+        "status": "Active",
+        "lastActive": 5,
+        "idleWeeks": 0,
+        "accuracy": 0.878,
+        "dead": [],
+        "window": [
+          4
+        ]
+      }
     },
     {
       "id": 1,
@@ -455,7 +491,17 @@
           "pts": 6.6,
           "bye": false
         }
-      ]
+      ],
+      "engagement": {
+        "status": "Active",
+        "lastActive": 5,
+        "idleWeeks": 0,
+        "accuracy": 0.937,
+        "dead": [],
+        "window": [
+          4
+        ]
+      }
     },
     {
       "id": 3,
@@ -565,7 +611,17 @@
           "pts": 5.4,
           "bye": false
         }
-      ]
+      ],
+      "engagement": {
+        "status": "Active",
+        "lastActive": 5,
+        "idleWeeks": 0,
+        "accuracy": 0.948,
+        "dead": [],
+        "window": [
+          4
+        ]
+      }
     },
     {
       "id": 7,
@@ -675,7 +731,17 @@
           "pts": 0,
           "bye": false
         }
-      ]
+      ],
+      "engagement": {
+        "status": "Active",
+        "lastActive": 5,
+        "idleWeeks": 0,
+        "accuracy": 0.898,
+        "dead": [],
+        "window": [
+          4
+        ]
+      }
     },
     {
       "id": 5,
@@ -785,7 +851,23 @@
           "pts": 7,
           "bye": false
         }
-      ]
+      ],
+      "engagement": {
+        "status": "Questionable",
+        "lastActive": 5,
+        "idleWeeks": 0,
+        "accuracy": 0.95,
+        "dead": [
+          {
+            "week": 4,
+            "name": "Zack Baun",
+            "why": "ruled out"
+          }
+        ],
+        "window": [
+          4
+        ]
+      }
     },
     {
       "id": 9,
@@ -895,7 +977,17 @@
           "pts": 7.2,
           "bye": false
         }
-      ]
+      ],
+      "engagement": {
+        "status": "Active",
+        "lastActive": 5,
+        "idleWeeks": 0,
+        "accuracy": 0.907,
+        "dead": [],
+        "window": [
+          4
+        ]
+      }
     },
     {
       "id": 8,
@@ -1005,7 +1097,17 @@
           "pts": 5.9,
           "bye": false
         }
-      ]
+      ],
+      "engagement": {
+        "status": "Active",
+        "lastActive": 4,
+        "idleWeeks": 0,
+        "accuracy": 0.917,
+        "dead": [],
+        "window": [
+          4
+        ]
+      }
     },
     {
       "id": 4,
@@ -1115,7 +1217,17 @@
           "pts": 5.7,
           "bye": false
         }
-      ]
+      ],
+      "engagement": {
+        "status": "Questionable",
+        "lastActive": 5,
+        "idleWeeks": 0,
+        "accuracy": 0.727,
+        "dead": [],
+        "window": [
+          4
+        ]
+      }
     }
   ]
 }

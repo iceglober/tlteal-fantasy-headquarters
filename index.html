@@ -7,12 +7,12 @@
 <style>
   :root {
     --bg: #f6f7f9; --card: #ffffff; --text: #14171c; --muted: #6b7280; --line: #e5e7eb;
-    --accent: #2563eb; --up: #16a34a; --down: #dc2626; --bar: #dbe4ff;
+    --accent: #2563eb; --up: #16a34a; --warn: #b45309; --down: #dc2626; --bar: #dbe4ff;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #0f1115; --card: #171a21; --text: #e8eaee; --muted: #9aa1ad; --line: #262a33;
-      --accent: #6b9cff; --up: #4ade80; --down: #f87171; --bar: #1f2a44;
+      --accent: #6b9cff; --up: #4ade80; --warn: #fbbf24; --down: #f87171; --bar: #1f2a44;
     }
   }
   * { box-sizing: border-box; }
@@ -51,6 +51,10 @@
   .comps b { color: var(--text); }
   .show-sm { display: none; }
   #dict { margin-top: 24px; font-size: 13px; }
+  #injury h2 { font-size: 18px; margin: 28px 0 10px; }
+  #injury td:last-child { white-space: normal; color: var(--muted); font-size: 13px; }
+  .status { font-weight: 700; }
+  .status.Active { color: var(--up); } .status.Questionable { color: var(--warn); } .status.Doubtful { color: var(--down); }
   #dict td { white-space: normal; vertical-align: top; }
   #dict .nw { white-space: nowrap; }
   #dict td:first-child { white-space: nowrap; font-weight: 600; }
@@ -75,6 +79,9 @@
   .rec-sm { display: none; }
   @media (max-width: 640px) {
     .rec-sm { display: inline; color: var(--text); font-weight: 600; }
+    #injury tr { display: grid; grid-template-columns: 1fr auto; border-bottom: 1px solid var(--line); }
+    #injury td { border: 0; padding: 8px 12px 2px; }
+    #injury td:last-child { grid-column: 1 / -1; padding: 0 12px 8px; }
     #dict td { display: block; border: 0; padding: 2px 0; }
     #dict tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--line); }
     #dict .nw { white-space: normal; }
@@ -98,6 +105,7 @@
   <header><h1 id="title">Power Rankings</h1><span id="updated"></span></header>
   <div class="card wrap" id="out"><div class="loading">Loading…</div></div>
 
+<section id="injury" hidden><h2>Injury Report</h2><div class="card"><table id="injury-table"></table></div></section>
 <table id="dict"></table>
 <div id="tip" popover="manual" role="tooltip"></div>
 </main>
@@ -148,6 +156,21 @@ async function main() {
   };
   const dec = (n) => n.toFixed(2).replace(/^0/, "");
   const formula = INPUTS.filter(i => wt[i.key] > 0).map(i => `<span class="nw">(${i.label} × ${dec(wt[i.key])})</span>`).join(" + ");
+  const SEVERITY = { Doubtful: 0, Questionable: 1, Active: 2 };
+  const report = snap.teams.filter(t => t.engagement)
+    .sort((a, b) => SEVERITY[a.engagement.status] - SEVERITY[b.engagement.status] || a.rank - b.rank);
+  if (report.length) {
+    document.getElementById("injury-table").innerHTML = report.map(t => {
+      const e = t.engagement;
+      const notes = [
+        `Last active Wk ${e.lastActive}`,
+        e.accuracy != null ? `Lineup accuracy ${pct(e.accuracy)}` : null,
+        ...e.dead.map(d => `Started ${d.name} (${d.why}, Wk ${d.week})`),
+      ].filter(Boolean).join(" · ");
+      return `<tr><td>${esc(t.name)}</td><td class="status ${e.status}">${e.status}</td><td>${esc(notes)}</td></tr>`;
+    }).join("");
+    document.getElementById("injury").hidden = false;
+  }
   document.getElementById("dict").innerHTML = [
     ["Power", formula],
     ["Current Week Projection", `Projected fantasy points for your best lineup in Week ${wk}`],
@@ -156,6 +179,10 @@ async function main() {
     ["Wins", "Total real wins (not All-Play)"],
     ["Scoring", "Each Power item is scored 0–100 against the league: best team = 100, worst = 0"],
     ["Luck", "Wins minus expected wins from All-Play (e.g. 1 game at 6-3 All-Play = 0.67 expected). Plus = lucky schedule. Not part of Power"],
+    ["Active", "Managing their team"],
+    ["Questionable", "No lineup change or roster move in 2 weeks, or started a player on bye / ruled out in the last 3 weeks, or lineup accuracy under 80%"],
+    ["Doubtful", "No lineup change or roster move in 3+ weeks, or started players on bye / ruled out in 2 of the last 3 weeks"],
+    ["Lineup accuracy", "Points scored ÷ points your best possible lineup would have scored, last 3 weeks"],
   ].map(([k, v], i) => `<tr><td>${k}</td><td>${i ? esc(v) : v}</td></tr>`).join("");
   const th = (label, key, cls = "") => `<th class="${cls}">${label}<button class="tip" data-tip="${key}" aria-label="About ${label || "this column"}">?</button></th>`;
 
