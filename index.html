@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Power Rankings</title>
+<title>TLTEAL Headquarters</title>
 <style>
   :root {
     --bg: #f6f7f9; --card: #ffffff; --text: #14171c; --muted: #6b7280; --line: #e5e7eb;
@@ -50,14 +50,16 @@
   .comps { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 10px; font-size: 13px; color: var(--muted); }
   .comps b { color: var(--text); }
   .show-sm, .show-sm-inline { display: none; }
-  #dict { margin-top: 24px; font-size: 13px; }
-  #report h2 { font-size: 18px; margin: 28px 0 10px; }
-  #report td:last-child { white-space: normal; color: var(--muted); font-size: 13px; }
+  .dict { margin-top: 24px; font-size: 13px; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
+  .tabs a { padding: 10px 14px; color: var(--muted); text-decoration: none; font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tabs a[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+  #report-table td:last-child { white-space: normal; color: var(--muted); font-size: 13px; }
   .status { font-weight: 700; }
   .status.Active { color: var(--up); } .status.Questionable { color: var(--warn); } .status.Doubtful { color: var(--down); }
-  #dict td { white-space: normal; vertical-align: top; }
-  #dict .nw { white-space: nowrap; }
-  #dict td:first-child { white-space: nowrap; font-weight: 600; }
+  .dict td { white-space: normal; vertical-align: top; }
+  .dict .nw { white-space: nowrap; }
+  .dict td:first-child { white-space: nowrap; font-weight: 600; }
   table.parts { width: auto; margin-bottom: 14px; font-size: 13px; }
   table.parts td.num { white-space: nowrap; }
   table.parts th, table.parts td { padding: 4px 16px 4px 0; border-bottom: 1px solid var(--line); }
@@ -79,13 +81,13 @@
   .rec-sm { display: none; }
   @media (max-width: 640px) {
     .rec-sm { display: inline; color: var(--text); font-weight: 600; }
-    #report thead { display: none; }
-    #report tr { display: grid; grid-template-columns: 1fr auto; border-bottom: 1px solid var(--line); }
-    #report td { border: 0; padding: 8px 12px 2px; }
-    #report td:last-child { grid-column: 1 / -1; padding: 0 12px 8px; }
-    #dict td { display: block; border: 0; padding: 2px 0; }
-    #dict tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--line); }
-    #dict .nw { white-space: normal; }
+    #report-table thead { display: none; }
+    #report-table tr { display: grid; grid-template-columns: 1fr auto; border-bottom: 1px solid var(--line); }
+    #report-table td { border: 0; padding: 8px 12px 2px; }
+    #report-table td:last-child { grid-column: 1 / -1; padding: 0 12px 8px; }
+    .dict td { display: block; border: 0; padding: 2px 0; }
+    .dict tr { display: block; padding: 8px 0; border-bottom: 1px solid var(--line); }
+    .dict .nw { white-space: normal; }
     .hide-sm { display: none; }
     .show-sm { display: flex; }
     .show-sm-inline { display: inline; color: var(--text); }
@@ -104,11 +106,19 @@
 </head>
 <body>
 <main>
-  <header><h1 id="title">Power Rankings</h1><span id="updated"></span></header>
-  <div class="card wrap" id="out"><div class="loading">Loading…</div></div>
-
-<section id="report" hidden><h2>Manager Report</h2><div class="card"><table id="report-table"></table></div></section>
-<table id="dict"></table>
+  <header><h1 id="title">TLTEAL Headquarters</h1><span id="updated"></span></header>
+  <nav class="tabs" role="tablist">
+    <a href="#rankings" role="tab" data-tab="rankings">Power Rankings</a>
+    <a href="#managers" role="tab" data-tab="managers">Manager Report</a>
+  </nav>
+  <section id="panel-rankings" class="panel">
+    <div class="card wrap" id="out"><div class="loading">Loading…</div></div>
+    <table class="dict" id="dict-rankings"></table>
+  </section>
+  <section id="panel-managers" class="panel" hidden>
+    <div class="card"><table id="report-table"><tr><td>No manager report yet.</td></tr></table></div>
+    <table class="dict" id="dict-managers"></table>
+  </section>
 <div id="tip" popover="manual" role="tooltip"></div>
 </main>
 
@@ -124,8 +134,8 @@ async function main() {
   const snap = await r.json();
   const { weights: wt, projWeek, asOfWeek, prevWeek } = snap;
 
-  document.title = `${snap.league.name} Power Rankings`;
-  document.getElementById("title").textContent = `${snap.league.name} Power Rankings`;
+  document.title = `${snap.league.name} Headquarters`;
+  document.getElementById("title").textContent = `${snap.league.name} Headquarters`;
   const updated = new Date(snap.generatedAt).toLocaleString("en-US", {
     timeZone: "America/Los_Angeles", weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short",
   });
@@ -177,9 +187,9 @@ async function main() {
     }).join("");
     document.getElementById("report-table").innerHTML =
       `<thead><tr><th>Team</th>${th("Status", "status")}${th("Strikes", "strikes", "num")}<th>Notes</th></tr></thead><tbody>${rows}</tbody>`;
-    document.getElementById("report").hidden = false;
   }
-  document.getElementById("dict").innerHTML = [
+  const dict = (rows) => rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("");
+  document.getElementById("dict-rankings").innerHTML = dict([
     ["Power", formula],
     ["Current Week Projection", `Projected fantasy points for your best lineup in Week ${wk}`],
     ["All-Play", "Record if you had played every other team, every week this season"],
@@ -187,11 +197,13 @@ async function main() {
     ["Wins", "Total real wins (not All-Play)"],
     ["Scoring", "Each Power item is scored 0–100 against the league: best team = 100, worst = 0"],
     ["Luck", "Wins minus expected wins from All-Play (e.g. 1 game at 6-3 All-Play = 0.67 expected). Plus = lucky schedule. Not part of Power"],
+  ].map(([k, v], i) => [k, i ? esc(v) : v]));
+  document.getElementById("dict-managers").innerHTML = dict([
     ["Strike", "Started a player on bye or ruled out, left a slot empty, benched someone projected 10+ points better, or went 3 weeks without touching lineup or roster"],
     ["Active", "0 strikes in the last 4 weeks"],
     ["Questionable", "1 strike in the last 4 weeks"],
     ["Doubtful", "2+ strikes in the last 4 weeks"],
-  ].map(([k, v], i) => `<tr><td>${k}</td><td>${i ? esc(v) : v}</td></tr>`).join("");
+  ].map(([k, v]) => [k, esc(v)]));
   const head = `<thead><tr>
     ${th("#", "rank")}${th("", "move")}${th("Team", "team")}${th("Power", "power", "score")}
     ${th("Record", "record", "num hide-sm")}${th("All-Play", "allplay", "num hide-sm")}${th("PPG", "ppg", "num hide-sm")}
@@ -253,6 +265,15 @@ async function main() {
     d.hidden = !d.hidden;
   });
 }
+
+// Tabs: the URL hash picks the tab, so #managers links straight to the manager report.
+function showTab() {
+  const tab = location.hash === "#managers" ? "managers" : "rankings";
+  for (const p of document.querySelectorAll(".panel")) p.hidden = p.id !== `panel-${tab}`;
+  for (const a of document.querySelectorAll(".tabs a")) a.setAttribute("aria-selected", a.dataset.tab === tab);
+}
+addEventListener("hashchange", showTab);
+showTab();
 
 main().catch(err => {
   console.error(err);

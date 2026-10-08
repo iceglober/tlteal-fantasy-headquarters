@@ -1,6 +1,6 @@
-# Sleeper Power Rankings
+# TLTEAL Headquarters
 
-Weekly power rankings for a Sleeper fantasy football league, hosted on GitHub Pages.
+Weekly power rankings and manager report for a Sleeper fantasy football league, hosted on GitHub Pages.
 
 - `scripts/snapshot.mjs` pulls the league from the public Sleeper API, computes rankings, and writes `data/latest.json` plus `data/history/<season>-week-NN.json`.
 - `.github/workflows/snapshot.yml` runs it every Thursday at 12:07 AM Pacific, commits the snapshot, and deploys the site. Run it manually from the Actions tab ("Run workflow") to refresh mid-week.
