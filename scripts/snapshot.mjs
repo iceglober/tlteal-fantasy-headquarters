@@ -146,9 +146,11 @@ const REPORT_WINDOW = 4;
 const BLUNDER_GAP = 10;
 const IDLE_WEEKS = 3;
 
-function computeManagerReport({ rosterIds, weekly, done, upcoming, startWeek, slots, txns, pastProj, names, scoring }) {
+function computeManagerReport({ rosterIds, weekly, done, upcoming, startWeek, slots, txns, pastProj, actual, names, scoring }) {
   const startSlots = slots.filter(sl => !NON_STARTING.has(sl));
   const projected = (w, pid) => pastProj[w][pid]?.stats?.gp > 0;
+  // Actual game participation. Sleeper drops projections for some Questionable players who then play.
+  const played = (w, pid) => actual[w]?.[pid]?.gp > 0;
   const projPts = (w, pid) => (projected(w, pid) ? scoreStats(pastProj[w][pid].stats, scoring) : 0);
   const posOf = (w, pid) => pastProj[w][pid]?.player?.fantasy_positions || names.pos[pid] || [];
   const window = done.slice(-REPORT_WINDOW);
@@ -160,11 +162,11 @@ function computeManagerReport({ rosterIds, weekly, done, upcoming, startWeek, sl
       const m = weekly[w].find(x => x.roster_id === id);
       if (!m) continue;
       const starters = m.starters || [];
-      // Dead starters: no projection that week and scored 0. A healthy player who just scored 0 doesn't count.
+      // Dead starters: no projection, scored 0, and didn't play. A player who played and scored 0 doesn't count.
       const dead = [];
       starters.forEach((pid, i) => {
         if (!pid || pid === "0") dead.push({ kind: "dead", text: `Left a slot empty (Wk ${w})` });
-        else if (!projected(w, pid) && !m.starters_points[i]) dead.push({ kind: "dead", text: `Started ${names[pid] || pid} (${pastProj[w][pid] ? "ruled out" : "bye"}, Wk ${w})` });
+        else if (!projected(w, pid) && !m.starters_points[i] && !played(w, pid)) dead.push({ kind: "dead", text: `Started ${names[pid] || pid} (${pastProj[w][pid] ? "ruled out" : "bye"}, Wk ${w})` });
       });
       if (dead.length) strikes[w].push(...dead);
       // Blunder: the single worst bench-over-starter gap, if it clears BLUNDER_GAP.
@@ -188,7 +190,9 @@ function computeManagerReport({ rosterIds, weekly, done, upcoming, startWeek, sl
       return !a || !b || JSON.stringify(a.starters) === JSON.stringify(b.starters);
     };
     for (const w of [...done, upcoming].filter(w => w && w > startWeek)) if (!sameStarters(w)) activeWeeks.add(w);
-    for (const t of txns) if (t.status === "complete" && t.roster_ids?.includes(id)) activeWeeks.add(t.leg);
+    // Waivers clear Wednesday ~12:10 AM Pacific, before Sleeper advances the week, so Sleeper tags them with the
+    // week just played. They set the next week's lineup, so credit them there.
+    for (const t of txns) if (t.status === "complete" && t.roster_ids?.includes(id)) activeWeeks.add(t.type === "waiver" ? t.leg + 1 : t.leg);
     let idle = 0;
     for (const w of done) {
       idle = activeWeeks.has(w) ? 0 : idle + 1;
@@ -259,14 +263,16 @@ async function main() {
   }
   const txWeeks = [];
   for (let w = 1; w <= (upcoming ?? lastDone); w++) txWeeks.push(w);
-  const [pastProjLists, txnLists] = await Promise.all([
+  const [pastProjLists, actualLists, txnLists] = await Promise.all([
     Promise.all(done.map(w => getJSON(projURL(league.season, w)))),
+    Promise.all(done.map(w => getJSON(`${API}/stats/nfl/regular/${league.season}/${w}`))),
     Promise.all(txWeeks.map(w => getJSON(`${API}/league/${LEAGUE_ID}/transactions/${w}`))),
   ]);
   const pastProj = Object.fromEntries(done.map((w, i) => [w, Object.fromEntries(pastProjLists[i].map(p => [p.player_id, p]))]));
+  const actual = Object.fromEntries(done.map((w, i) => [w, actualLists[i]]));
   const engagement = computeManagerReport({
     rosterIds, weekly, done, upcoming, startWeek, slots: league.roster_positions,
-    txns: txnLists.flat(), pastProj, names, scoring: league.scoring_settings,
+    txns: txnLists.flat(), pastProj, actual, names, scoring: league.scoring_settings,
   });
 
   if (process.argv.includes("--report-only")) {
