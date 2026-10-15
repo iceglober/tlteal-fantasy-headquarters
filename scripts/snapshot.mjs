@@ -139,7 +139,9 @@ function computeRankings(rosterIds, weekly, weeks, lineups) {
 
 // Manager report: is each manager still running their team? Judgment calls don't count; only neglect does.
 // A week earns at most one strike of each kind:
-//   dead     started a player on bye or ruled out before kickoff, or left a slot empty
+//   dead     started a player on bye or ruled out before kickoff, or left a slot empty. A lone first-time slip is
+//            forgiven; it counts if it's 2+ dead starters in the week, a repeat from last week, or there was a
+//            viable bench replacement. Either way a week earns one dead strike.
 //   blunder  benched a player projected BLUNDER_GAP+ points better than a starter they could have replaced
 //   idle     no lineup change or roster move for IDLE_WEEKS straight weeks (one strike per streak)
 const REPORT_WINDOW = 4;
@@ -157,20 +159,25 @@ function computeManagerReport({ rosterIds, weekly, done, upcoming, startWeek, sl
   const out = {};
   for (const id of rosterIds) {
     const strikes = Object.fromEntries(done.map(w => [w, []]));
+    const deadBy = {};
 
     for (const w of done) {
       const m = weekly[w].find(x => x.roster_id === id);
       if (!m) continue;
       const starters = m.starters || [];
       // Dead starters: no projection, scored 0, and didn't play. A player who played and scored 0 doesn't count.
+      const bench = (m.players || []).filter(pid => !starters.includes(pid) && projected(w, pid));
       const dead = [];
       starters.forEach((pid, i) => {
-        if (!pid || pid === "0") dead.push({ kind: "dead", text: `Left a slot empty (Wk ${w})` });
-        else if (!projected(w, pid) && !m.starters_points[i] && !played(w, pid)) dead.push({ kind: "dead", text: `Started ${names[pid] || pid} (${pastProj[w][pid] ? "ruled out" : "bye"}, Wk ${w})` });
+        const empty = !pid || pid === "0";
+        if (!empty && (projected(w, pid) || m.starters_points[i] || played(w, pid))) return;
+        const ok = FLEX_ELIGIBLE[startSlots[i]] || [startSlots[i]];
+        const alt = bench.some(b => posOf(w, b).some(x => ok.includes(x)));
+        const text = empty ? `Left a slot empty (Wk ${w})` : `Started ${names[pid] || pid} (${pastProj[w][pid] ? "ruled out" : "bye"}, Wk ${w})`;
+        dead.push({ kind: "dead", text: alt ? `${text}, with a viable player on the bench` : text, alt });
       });
-      if (dead.length) strikes[w].push(...dead);
+      deadBy[w] = dead;
       // Blunder: the single worst bench-over-starter gap, if it clears BLUNDER_GAP.
-      const bench = (m.players || []).filter(pid => !starters.includes(pid) && projected(w, pid));
       let worst = null;
       starters.forEach((pid, i) => {
         if (!projected(w, pid)) return; // already counted as dead
@@ -182,6 +189,15 @@ function computeManagerReport({ rosterIds, weekly, done, upcoming, startWeek, sl
       });
       if (worst) strikes[w].push({ kind: "blunder", text: `Started ${names[worst.pid] || worst.pid} over ${names[worst.b] || worst.b} (${Math.round(worst.gap)} pts worse projected, Wk ${w})` });
     }
+
+    // Dead starters only count on repeat, in multiples, or when a viable bench player was available.
+    done.forEach((w, i) => {
+      const dead = deadBy[w] || [];
+      if (!dead.length) return;
+      const alt = dead.some(d => d.alt);
+      if (dead.length < 2 && !alt && !deadBy[done[i - 1]]?.length) return;
+      strikes[w].push(...dead.map(d => ({ kind: "dead", text: d.text })));
+    });
 
     // Idle: weeks with no starter change and no roster move. The first week counts as activity (draft + first lineup).
     const activeWeeks = new Set([startWeek]);
