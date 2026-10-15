@@ -4,8 +4,8 @@
     "name": "TLTEAL",
     "season": "2026"
   },
-  "generatedAt": "2026-10-15T06:23:19.567Z",
-  "scheduledFor": null,
+  "generatedAt": "2026-10-15T12:37:15.560Z",
+  "scheduledFor": "2026-10-15",
   "asOfWeek": 5,
   "projWeek": 6,
   "prevWeek": 4,
@@ -24,7 +24,7 @@
       "name": "SinkOrSwim",
       "owner": "mstigman",
       "avatar": "https://sleepercdn.com/avatars/thumbs/51385ba57cd089261f6de9ce483b8716",
-      "score": 80.8,
+      "score": 80.6,
       "w": 2,
       "l": 0,
       "tie": 0,
@@ -33,12 +33,12 @@
       "pf": 386.3,
       "ppg": 193.2,
       "luck": 0.1,
-      "proj": 168.8,
+      "proj": 168.1,
       "comp": {
         "allPlay": 1,
         "ppg": 1,
         "winPct": 1,
-        "roster": 0.361
+        "roster": 0.353
       },
       "engagement": {
         "status": "Active",
@@ -78,13 +78,13 @@
         {
           "slot": "WR",
           "name": "CeeDee Lamb",
-          "pts": 16.6,
+          "pts": 16.2,
           "bye": false
         },
         {
           "slot": "WR",
           "name": "Christian Watson",
-          "pts": 15.9,
+          "pts": 15.5,
           "bye": false
         },
         {
@@ -402,7 +402,7 @@
       "name": "ehess3648",
       "owner": "ehess3648",
       "avatar": "https://sleepercdn.com/avatars/thumbs/51385ba57cd089261f6de9ce483b8716",
-      "score": 44.8,
+      "score": 44.7,
       "w": 1,
       "l": 1,
       "tie": 0,
@@ -411,12 +411,12 @@
       "pf": 338.1,
       "ppg": 169,
       "luck": -0.3,
-      "proj": 142.9,
+      "proj": 142.7,
       "comp": {
         "allPlay": 0.643,
         "ppg": 0.607,
         "winPct": 0.5,
-        "roster": 0.095
+        "roster": 0.093
       },
       "engagement": {
         "status": "Active",
@@ -437,8 +437,8 @@
       "lineup": [
         {
           "slot": "QB",
-          "name": "Jordan Love",
-          "pts": 21.1,
+          "name": "Lamar Jackson",
+          "pts": 20.9,
           "bye": false
         },
         {
@@ -528,7 +528,7 @@
       "name": "CodeBlue1",
       "owner": "CodeBlue1",
       "avatar": "https://sleepercdn.com/avatars/thumbs/db47d5f7be11ad6a9d094accc45e52b0",
-      "score": 41.2,
+      "score": 41.3,
       "w": 2,
       "l": 0,
       "tie": 0,
@@ -537,12 +537,12 @@
       "pf": 309.8,
       "ppg": 154.9,
       "luck": 1.1,
-      "proj": 153.2,
+      "proj": 153.7,
       "comp": {
         "allPlay": 0.357,
         "ppg": 0.376,
         "winPct": 1,
-        "roster": 0.201
+        "roster": 0.205
       },
       "engagement": {
         "status": "Active",
@@ -570,7 +570,7 @@
         {
           "slot": "RB",
           "name": "Javonte Williams",
-          "pts": 15.5,
+          "pts": 16,
           "bye": false
         },
         {
@@ -654,7 +654,7 @@
       "name": "Loosie Goosie",
       "owner": "hessbag",
       "avatar": "https://sleepercdn.com/avatars/thumbs/14f799cf7102df6c8d8333f809db756c",
-      "score": 38.8,
+      "score": 38.7,
       "w": 1,
       "l": 1,
       "tie": 0,
@@ -663,12 +663,12 @@
       "pf": 321.5,
       "ppg": 160.8,
       "luck": 0,
-      "proj": 155.4,
+      "proj": 155,
       "comp": {
         "allPlay": 0.429,
         "ppg": 0.472,
         "winPct": 0.5,
-        "roster": 0.223
+        "roster": 0.22
       },
       "engagement": {
         "status": "Active",
@@ -696,7 +696,7 @@
         {
           "slot": "RB",
           "name": "Derrick Henry",
-          "pts": 15.8,
+          "pts": 15.7,
           "bye": false
         },
         {
@@ -714,7 +714,7 @@
         {
           "slot": "WR",
           "name": "Matthew Golden",
-          "pts": 12.8,
+          "pts": 12.5,
           "bye": false
         },
         {
@@ -780,7 +780,7 @@
       "name": "Sunday Scares",
       "owner": "keshawnhen",
       "avatar": "https://sleepercdn.com/avatars/thumbs/2aafee9999e4886980f31d5b84f44e81",
-      "score": 37.1,
+      "score": 37,
       "w": 1,
       "l": 1,
       "tie": 0,
@@ -789,12 +789,12 @@
       "pf": 331.3,
       "ppg": 165.7,
       "luck": -0.1,
-      "proj": 136.3,
+      "proj": 136,
       "comp": {
         "allPlay": 0.5,
         "ppg": 0.552,
         "winPct": 0.5,
-        "roster": 0.028
+        "roster": 0.025
       },
       "engagement": {
         "status": "Doubtful",
@@ -844,7 +844,7 @@
         {
           "slot": "WR",
           "name": "George Pickens",
-          "pts": 11.1,
+          "pts": 10.8,
           "bye": false
         },
         {
@@ -1212,7 +1212,7 @@
         {
           "slot": "RB",
           "name": "MarShawn Lloyd",
-          "pts": 11.3,
+          "pts": 11.5,
           "bye": false
         },
         {
@@ -1230,7 +1230,7 @@
         {
           "slot": "TE",
           "name": "Tucker Kraft",
-          "pts": 10.2,
+          "pts": 10,
           "bye": false
         },
         {
@@ -1266,7 +1266,7 @@
         {
           "slot": "FLEX",
           "name": "Saquon Barkley",
-          "pts": 10.1,
+          "pts": 10.2,
           "bye": false
         },
         {
