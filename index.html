@@ -50,6 +50,8 @@
   .comps { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 10px; font-size: 13px; color: var(--muted); }
   .comps b { color: var(--text); }
   .show-sm, .show-sm-inline { display: none; }
+  ul.notes { margin: 0; padding-left: 18px; }
+  ul.notes li { margin: 0 0 2px; }
   .dict { margin-top: 24px; font-size: 13px; }
   .tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
   .tabs a { padding: 10px 14px; color: var(--muted); text-decoration: none; font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; }
@@ -90,7 +92,7 @@
     .dict .nw { white-space: normal; }
     .hide-sm { display: none; }
     .show-sm { display: flex; }
-    .show-sm-inline { display: inline; color: var(--text); }
+    .show-sm-inline { display: block; color: var(--text); }
     table.parts th, table.parts td { padding-right: 6px; }
     table.parts td.num, table.parts th.num { padding-left: 6px; }
     th, td { padding: 8px 4px; }
@@ -180,8 +182,9 @@ async function main() {
       const trend = e.byWeek.length > 1
         ? `Strikes by week: ${e.byWeek.map(x => x.strikes).join(" · ")} · Season: ${e.season} in ${e.byWeek.length} weeks`
         : null;
-      const strikesSm = `<span class="show-sm-inline">${e.strikes} strike${e.strikes === 1 ? "" : "s"}${e.reasons.length || trend ? " · " : ""}</span>`;
-      const notes = [...e.reasons, trend].filter(Boolean).map(esc).join(" · ");
+      const strikesSm = `<span class="show-sm-inline">${e.strikes} strike${e.strikes === 1 ? "" : "s"}</span>`;
+      const items = [...e.reasons, trend].filter(Boolean);
+      const notes = items.length ? `<ul class="notes">${items.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
       return `<tr><td>${esc(t.name)}</td><td class="status ${e.status}">${e.status}</td>
         <td class="num hide-sm">${e.strikes}</td><td>${strikesSm}${notes}</td></tr>`;
     }).join("");
