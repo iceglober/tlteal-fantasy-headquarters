@@ -4,12 +4,12 @@
     "name": "TLTEAL",
     "season": "2026"
   },
-  "generatedAt": "2026-10-15T17:38:34.658Z",
-  "scheduledFor": null,
-  "asOfWeek": 5,
-  "projWeek": 6,
-  "prevWeek": 4,
-  "games": 2,
+  "generatedAt": "2026-10-22T12:55:58.077Z",
+  "scheduledFor": "2026-10-22",
+  "asOfWeek": 6,
+  "projWeek": 7,
+  "prevWeek": 5,
+  "games": 3,
   "weights": {
     "roster": 0.3,
     "allPlay": 0.3,
@@ -24,272 +24,20 @@
       "name": "SinkOrSwim",
       "owner": "mstigman",
       "avatar": "https://sleepercdn.com/avatars/thumbs/51385ba57cd089261f6de9ce483b8716",
-      "score": 80.6,
-      "w": 2,
+      "score": 100,
+      "w": 3,
       "l": 0,
       "tie": 0,
-      "apW": 17,
-      "apL": 1,
-      "pf": 386.3,
-      "ppg": 193.2,
-      "luck": 0.1,
-      "proj": 168.6,
+      "apW": 23,
+      "apL": 4,
+      "pf": 534.3,
+      "ppg": 178.1,
+      "luck": 0.4,
+      "proj": 170.9,
       "comp": {
         "allPlay": 1,
         "ppg": 1,
         "winPct": 1,
-        "roster": 0.353
-      },
-      "engagement": {
-        "status": "Active",
-        "strikes": 0,
-        "reasons": [],
-        "byWeek": [
-          {
-            "week": 4,
-            "strikes": 0
-          },
-          {
-            "week": 5,
-            "strikes": 0
-          }
-        ],
-        "season": 0
-      },
-      "lineup": [
-        {
-          "slot": "QB",
-          "name": "Trevor Lawrence",
-          "pts": 18.4,
-          "bye": false
-        },
-        {
-          "slot": "RB",
-          "name": "Kenneth Walker",
-          "pts": 19.8,
-          "bye": false
-        },
-        {
-          "slot": "RB",
-          "name": "Kyren Williams",
-          "pts": 19.7,
-          "bye": false
-        },
-        {
-          "slot": "WR",
-          "name": "CeeDee Lamb",
-          "pts": 16.3,
-          "bye": false
-        },
-        {
-          "slot": "WR",
-          "name": "Christian Watson",
-          "pts": 15.6,
-          "bye": false
-        },
-        {
-          "slot": "TE",
-          "name": "Dallas Goedert",
-          "pts": 9,
-          "bye": false
-        },
-        {
-          "slot": "K",
-          "name": "Jason Myers",
-          "pts": 7.8,
-          "bye": false
-        },
-        {
-          "slot": "DEF",
-          "name": "SF D/ST",
-          "pts": 7.4,
-          "bye": false
-        },
-        {
-          "slot": "DL",
-          "name": "Will Anderson",
-          "pts": 6.7,
-          "bye": false
-        },
-        {
-          "slot": "LB",
-          "name": "Terrel Bernard",
-          "pts": 8.2,
-          "bye": false
-        },
-        {
-          "slot": "DB",
-          "name": "Devon Witherspoon",
-          "pts": 4.9,
-          "bye": false
-        },
-        {
-          "slot": "FLEX",
-          "name": "Chuba Hubbard",
-          "pts": 15,
-          "bye": false
-        },
-        {
-          "slot": "FLEX",
-          "name": "Emanuel Wilson",
-          "pts": 12.1,
-          "bye": false
-        },
-        {
-          "slot": "IDP_FLEX",
-          "name": "Drue Tranquill",
-          "pts": 7.6,
-          "bye": false
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "rank": 2,
-      "prevRank": 5,
-      "name": "Shooter McGavin’s Blitz",
-      "owner": "m3hess",
-      "avatar": "https://sleepercdn.com/avatars/thumbs/51385ba57cd089261f6de9ce483b8716",
-      "score": 62.6,
-      "w": 1,
-      "l": 1,
-      "tie": 0,
-      "apW": 15,
-      "apL": 3,
-      "pf": 372.5,
-      "ppg": 186.3,
-      "luck": -0.7,
-      "proj": 157.6,
-      "comp": {
-        "allPlay": 0.857,
-        "ppg": 0.888,
-        "winPct": 0.5,
-        "roster": 0.241
-      },
-      "engagement": {
-        "status": "Active",
-        "strikes": 0,
-        "reasons": [],
-        "byWeek": [
-          {
-            "week": 4,
-            "strikes": 0
-          },
-          {
-            "week": 5,
-            "strikes": 0
-          }
-        ],
-        "season": 0
-      },
-      "lineup": [
-        {
-          "slot": "QB",
-          "name": "Josh Allen",
-          "pts": 24.9,
-          "bye": false
-        },
-        {
-          "slot": "RB",
-          "name": "Jonathan Taylor",
-          "pts": 21.5,
-          "bye": false
-        },
-        {
-          "slot": "RB",
-          "name": "Tony Pollard",
-          "pts": 9.8,
-          "bye": false
-        },
-        {
-          "slot": "WR",
-          "name": "Malik Nabers",
-          "pts": 11.3,
-          "bye": false
-        },
-        {
-          "slot": "WR",
-          "name": "Tetairoa McMillan",
-          "pts": 11.1,
-          "bye": false
-        },
-        {
-          "slot": "TE",
-          "name": "Tyler Warren",
-          "pts": 10.1,
-          "bye": false
-        },
-        {
-          "slot": "K",
-          "name": "Matt Gay",
-          "pts": 8.8,
-          "bye": false
-        },
-        {
-          "slot": "DEF",
-          "name": "IND D/ST",
-          "pts": 9,
-          "bye": false
-        },
-        {
-          "slot": "DL",
-          "name": "Arvell Reese",
-          "pts": 5.8,
-          "bye": false
-        },
-        {
-          "slot": "LB",
-          "name": "Devin Lloyd",
-          "pts": 8.7,
-          "bye": false
-        },
-        {
-          "slot": "DB",
-          "name": "Caleb Downs",
-          "pts": 8.1,
-          "bye": false
-        },
-        {
-          "slot": "FLEX",
-          "name": "Josh Downs",
-          "pts": 10,
-          "bye": false
-        },
-        {
-          "slot": "FLEX",
-          "name": "DK Metcalf",
-          "pts": 10,
-          "bye": false
-        },
-        {
-          "slot": "IDP_FLEX",
-          "name": "Nate Landman",
-          "pts": 8.5,
-          "bye": false
-        }
-      ]
-    },
-    {
-      "id": 10,
-      "rank": 3,
-      "prevRank": 3,
-      "name": "Dagger",
-      "owner": "dgundel",
-      "avatar": "https://sleepercdn.com/uploads/7ff330b6cb0abd027fa55c0f1a92e17f.jpg",
-      "score": 56.2,
-      "w": 1,
-      "l": 1,
-      "tie": 0,
-      "apW": 7,
-      "apL": 11,
-      "pf": 313.2,
-      "ppg": 156.6,
-      "luck": 0.2,
-      "proj": 231.8,
-      "comp": {
-        "allPlay": 0.286,
-        "ppg": 0.404,
-        "winPct": 0.5,
         "roster": 1
       },
       "engagement": {
@@ -304,6 +52,270 @@
           {
             "week": 5,
             "strikes": 0
+          },
+          {
+            "week": 6,
+            "strikes": 0
+          }
+        ],
+        "season": 0
+      },
+      "lineup": [
+        {
+          "slot": "QB",
+          "name": "Joe Burrow",
+          "pts": 19.8,
+          "bye": false
+        },
+        {
+          "slot": "RB",
+          "name": "Kyren Williams",
+          "pts": 18.5,
+          "bye": false
+        },
+        {
+          "slot": "RB",
+          "name": "Kenneth Walker III",
+          "pts": 17.4,
+          "bye": false
+        },
+        {
+          "slot": "WR",
+          "name": "Christian Watson",
+          "pts": 15.4,
+          "bye": false
+        },
+        {
+          "slot": "WR",
+          "name": "CeeDee Lamb",
+          "pts": 14.4,
+          "bye": false
+        },
+        {
+          "slot": "TE",
+          "name": "Dallas Goedert",
+          "pts": 9.3,
+          "bye": false
+        },
+        {
+          "slot": "K",
+          "name": "Will Reichard",
+          "pts": 9.8,
+          "bye": false
+        },
+        {
+          "slot": "DEF",
+          "name": "SF D/ST",
+          "pts": 6.8,
+          "bye": false
+        },
+        {
+          "slot": "DL",
+          "name": "Will Anderson Jr.",
+          "pts": 9.2,
+          "bye": false
+        },
+        {
+          "slot": "LB",
+          "name": "Jack Campbell",
+          "pts": 9.2,
+          "bye": false
+        },
+        {
+          "slot": "DB",
+          "name": "Devon Witherspoon",
+          "pts": 4.9,
+          "bye": false
+        },
+        {
+          "slot": "FLEX",
+          "name": "Chuba Hubbard",
+          "pts": 14.9,
+          "bye": false
+        },
+        {
+          "slot": "FLEX",
+          "name": "A.J. Brown",
+          "pts": 12.5,
+          "bye": false
+        },
+        {
+          "slot": "IDP_FLEX",
+          "name": "Aidan Hutchinson",
+          "pts": 8.7,
+          "bye": false
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "rank": 2,
+      "prevRank": 2,
+      "name": "Shooter McGavin’s Blitz",
+      "owner": "m3hess",
+      "avatar": "https://sleepercdn.com/avatars/thumbs/51385ba57cd089261f6de9ce483b8716",
+      "score": 79.9,
+      "w": 2,
+      "l": 1,
+      "tie": 0,
+      "apW": 23,
+      "apL": 4,
+      "pf": 524.1,
+      "ppg": 174.7,
+      "luck": -0.6,
+      "proj": 144,
+      "comp": {
+        "allPlay": 1,
+        "ppg": 0.934,
+        "winPct": 0.667,
+        "roster": 0.551
+      },
+      "engagement": {
+        "status": "Active",
+        "strikes": 0,
+        "reasons": [],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          },
+          {
+            "week": 5,
+            "strikes": 0
+          },
+          {
+            "week": 6,
+            "strikes": 0
+          }
+        ],
+        "season": 0
+      },
+      "lineup": [
+        {
+          "slot": "QB",
+          "name": "Kyler Murray",
+          "pts": 16.3,
+          "bye": false
+        },
+        {
+          "slot": "RB",
+          "name": "Jonathan Taylor",
+          "pts": 16.3,
+          "bye": false
+        },
+        {
+          "slot": "RB",
+          "name": "Tony Pollard",
+          "pts": 11,
+          "bye": false
+        },
+        {
+          "slot": "WR",
+          "name": "Tetairoa McMillan",
+          "pts": 11.7,
+          "bye": false
+        },
+        {
+          "slot": "WR",
+          "name": "Malik Nabers",
+          "pts": 11.2,
+          "bye": false
+        },
+        {
+          "slot": "TE",
+          "name": "Tyler Warren",
+          "pts": 8,
+          "bye": false
+        },
+        {
+          "slot": "K",
+          "name": "Matt Gay",
+          "pts": 8.8,
+          "bye": false
+        },
+        {
+          "slot": "DEF",
+          "name": "CLE D/ST",
+          "pts": 8.6,
+          "bye": false
+        },
+        {
+          "slot": "DL",
+          "name": "Andrew Van Ginkel",
+          "pts": 7.5,
+          "bye": false
+        },
+        {
+          "slot": "LB",
+          "name": "Devin Lloyd",
+          "pts": 9.4,
+          "bye": false
+        },
+        {
+          "slot": "DB",
+          "name": "Caleb Downs",
+          "pts": 7,
+          "bye": false
+        },
+        {
+          "slot": "FLEX",
+          "name": "DK Metcalf",
+          "pts": 10.4,
+          "bye": false
+        },
+        {
+          "slot": "FLEX",
+          "name": "Quinshon Judkins",
+          "pts": 10.1,
+          "bye": false
+        },
+        {
+          "slot": "IDP_FLEX",
+          "name": "Nate Landman",
+          "pts": 7.8,
+          "bye": false
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "rank": 3,
+      "prevRank": 3,
+      "name": "Dagger",
+      "owner": "dgundel",
+      "avatar": "https://sleepercdn.com/uploads/7ff330b6cb0abd027fa55c0f1a92e17f.jpg",
+      "score": 67.5,
+      "w": 2,
+      "l": 1,
+      "tie": 0,
+      "apW": 16,
+      "apL": 11,
+      "pf": 480.4,
+      "ppg": 160.1,
+      "luck": 0.2,
+      "proj": 154.6,
+      "comp": {
+        "allPlay": 0.65,
+        "ppg": 0.647,
+        "winPct": 0.667,
+        "roster": 0.728
+      },
+      "engagement": {
+        "status": "Active",
+        "strikes": 0,
+        "reasons": [],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          },
+          {
+            "week": 5,
+            "strikes": 0
+          },
+          {
+            "week": 6,
+            "strikes": 0
           }
         ],
         "season": 0
@@ -312,363 +324,111 @@
         {
           "slot": "QB",
           "name": "Brock Purdy",
-          "pts": 22.2,
+          "pts": 20.5,
           "bye": false
         },
         {
           "slot": "RB",
-          "name": "Bhayshul Tuten",
-          "pts": 11,
+          "name": "Chase Brown",
+          "pts": 13.1,
           "bye": false
         },
         {
           "slot": "RB",
-          "name": "Blake Corum",
-          "pts": 7.5,
+          "name": "Aaron Jones Sr.",
+          "pts": 10.9,
           "bye": false
         },
         {
           "slot": "WR",
-          "name": "Nico Collins",
-          "pts": 15,
+          "name": "Ja'Marr Chase",
+          "pts": 15.9,
           "bye": false
         },
         {
           "slot": "WR",
           "name": "Zay Flowers",
-          "pts": 14.6,
+          "pts": 15.8,
           "bye": false
         },
         {
           "slot": "TE",
-          "name": "Harold Fannin",
-          "pts": 8.4,
+          "name": "T.J. Hockenson",
+          "pts": 7.6,
           "bye": false
         },
         {
           "slot": "K",
           "name": "Eddy Pineiro",
-          "pts": 8.5,
+          "pts": 8.2,
           "bye": false
         },
         {
           "slot": "DEF",
           "name": "MIN D/ST",
-          "pts": 92,
-          "bye": true
+          "pts": 8.8,
+          "bye": false
         },
         {
           "slot": "DL",
-          "name": "Nick Bosa",
-          "pts": 6.1,
+          "name": "Jeffery Simmons",
+          "pts": 6,
           "bye": false
         },
         {
           "slot": "LB",
-          "name": "Ernest Jones",
-          "pts": 6.2,
+          "name": "Alex Singleton",
+          "pts": 6.5,
           "bye": false
         },
         {
           "slot": "DB",
           "name": "Quentin Lake",
-          "pts": 5.9,
+          "pts": 5.3,
+          "bye": false
+        },
+        {
+          "slot": "FLEX",
+          "name": "Nico Collins",
+          "pts": 15.5,
           "bye": false
         },
         {
           "slot": "FLEX",
           "name": "Chris Olave",
-          "pts": 14.3,
-          "bye": false
-        },
-        {
-          "slot": "FLEX",
-          "name": "Mike Evans",
           "pts": 14.1,
           "bye": false
         },
         {
           "slot": "IDP_FLEX",
-          "name": "Jeffery Simmons",
-          "pts": 6.1,
-          "bye": false
-        }
-      ]
-    },
-    {
-      "id": 6,
-      "rank": 4,
-      "prevRank": 2,
-      "name": "ehess3648",
-      "owner": "ehess3648",
-      "avatar": "https://sleepercdn.com/avatars/thumbs/51385ba57cd089261f6de9ce483b8716",
-      "score": 44.6,
-      "w": 1,
-      "l": 1,
-      "tie": 0,
-      "apW": 12,
-      "apL": 6,
-      "pf": 338.1,
-      "ppg": 169,
-      "luck": -0.3,
-      "proj": 142.6,
-      "comp": {
-        "allPlay": 0.643,
-        "ppg": 0.607,
-        "winPct": 0.5,
-        "roster": 0.087
-      },
-      "engagement": {
-        "status": "Active",
-        "strikes": 0,
-        "reasons": [],
-        "byWeek": [
-          {
-            "week": 4,
-            "strikes": 0
-          },
-          {
-            "week": 5,
-            "strikes": 0
-          }
-        ],
-        "season": 0
-      },
-      "lineup": [
-        {
-          "slot": "QB",
-          "name": "Jordan Love",
-          "pts": 20.8,
-          "bye": false
-        },
-        {
-          "slot": "RB",
-          "name": "Bijan Robinson",
-          "pts": 24.3,
-          "bye": false
-        },
-        {
-          "slot": "RB",
-          "name": "Rhamondre Stevenson",
-          "pts": 16.1,
-          "bye": false
-        },
-        {
-          "slot": "WR",
-          "name": "Luther Burden",
-          "pts": 10,
-          "bye": false
-        },
-        {
-          "slot": "WR",
-          "name": "Wan'Dale Robinson",
-          "pts": 9.1,
-          "bye": false
-        },
-        {
-          "slot": "TE",
-          "name": "Brock Bowers",
-          "pts": 13.8,
-          "bye": false
-        },
-        {
-          "slot": "K",
-          "name": "Spencer Shrader",
-          "pts": 10.5,
-          "bye": false
-        },
-        {
-          "slot": "DEF",
-          "name": "CHI D/ST",
-          "pts": 6.5,
-          "bye": false
-        },
-        {
-          "slot": "DL",
-          "name": "Aidan Hutchinson",
-          "pts": 0,
-          "bye": false
-        },
-        {
-          "slot": "LB",
-          "name": "Foyesade Oluokun",
-          "pts": 7.4,
-          "bye": false
-        },
-        {
-          "slot": "DB",
-          "name": "Kyle Hamilton",
-          "pts": 7.8,
-          "bye": false
-        },
-        {
-          "slot": "FLEX",
-          "name": "Emeka Egbuka",
-          "pts": 8.5,
-          "bye": false
-        },
-        {
-          "slot": "FLEX",
-          "name": "Mark Andrews",
-          "pts": 7.7,
-          "bye": false
-        },
-        {
-          "slot": "IDP_FLEX",
-          "name": "Demetrius Knight",
-          "pts": 0,
-          "bye": false
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "rank": 5,
-      "prevRank": 6,
-      "name": "CodeBlue1",
-      "owner": "CodeBlue1",
-      "avatar": "https://sleepercdn.com/avatars/thumbs/db47d5f7be11ad6a9d094accc45e52b0",
-      "score": 40.9,
-      "w": 2,
-      "l": 0,
-      "tie": 0,
-      "apW": 8,
-      "apL": 10,
-      "pf": 309.8,
-      "ppg": 154.9,
-      "luck": 1.1,
-      "proj": 153,
-      "comp": {
-        "allPlay": 0.357,
-        "ppg": 0.376,
-        "winPct": 1,
-        "roster": 0.194
-      },
-      "engagement": {
-        "status": "Active",
-        "strikes": 0,
-        "reasons": [],
-        "byWeek": [
-          {
-            "week": 4,
-            "strikes": 0
-          },
-          {
-            "week": 5,
-            "strikes": 0
-          }
-        ],
-        "season": 0
-      },
-      "lineup": [
-        {
-          "slot": "QB",
-          "name": "Jacoby Brissett",
-          "pts": 14.5,
-          "bye": false
-        },
-        {
-          "slot": "RB",
-          "name": "Javonte Williams",
-          "pts": 16,
-          "bye": false
-        },
-        {
-          "slot": "RB",
-          "name": "Braelon Allen",
-          "pts": 12.5,
-          "bye": false
-        },
-        {
-          "slot": "WR",
-          "name": "Jaxon Smith-Njigba",
-          "pts": 18.9,
-          "bye": false
-        },
-        {
-          "slot": "WR",
-          "name": "Garrett Wilson",
-          "pts": 12.5,
-          "bye": false
-        },
-        {
-          "slot": "TE",
-          "name": "Isaiah Likely",
-          "pts": 10.6,
-          "bye": false
-        },
-        {
-          "slot": "K",
-          "name": "Cam Little",
-          "pts": 8.3,
-          "bye": false
-        },
-        {
-          "slot": "DEF",
-          "name": "PIT D/ST",
-          "pts": 8.2,
-          "bye": false
-        },
-        {
-          "slot": "DL",
-          "name": "Danielle Hunter",
-          "pts": 6.5,
-          "bye": false
-        },
-        {
-          "slot": "LB",
-          "name": "Roquan Smith",
-          "pts": 7.9,
-          "bye": false
-        },
-        {
-          "slot": "DB",
-          "name": "Kam Curl",
-          "pts": 5.8,
-          "bye": false
-        },
-        {
-          "slot": "FLEX",
-          "name": "Ashton Jeanty",
-          "pts": 12.4,
-          "bye": false
-        },
-        {
-          "slot": "FLEX",
-          "name": "Michael Wilson",
-          "pts": 11.4,
-          "bye": false
-        },
-        {
-          "slot": "IDP_FLEX",
-          "name": "Sonny Styles",
-          "pts": 7.5,
+          "name": "Ernest Jones IV",
+          "pts": 6.3,
           "bye": false
         }
       ]
     },
     {
       "id": 1,
-      "rank": 6,
-      "prevRank": 4,
+      "rank": 4,
+      "prevRank": 6,
       "name": "Loosie Goosie",
       "owner": "hessbag",
       "avatar": "https://sleepercdn.com/avatars/thumbs/14f799cf7102df6c8d8333f809db756c",
-      "score": 38.1,
+      "score": 63.7,
       "w": 1,
-      "l": 1,
+      "l": 2,
       "tie": 0,
-      "apW": 9,
-      "apL": 9,
-      "pf": 321.5,
-      "ppg": 160.8,
-      "luck": 0,
-      "proj": 153.5,
+      "apW": 16,
+      "apL": 11,
+      "pf": 471.2,
+      "ppg": 157.1,
+      "luck": -0.8,
+      "proj": 159.9,
       "comp": {
-        "allPlay": 0.429,
-        "ppg": 0.472,
-        "winPct": 0.5,
-        "roster": 0.199
+        "allPlay": 0.65,
+        "ppg": 0.587,
+        "winPct": 0.333,
+        "roster": 0.817
       },
       "engagement": {
         "status": "Active",
@@ -682,6 +442,10 @@
           {
             "week": 5,
             "strikes": 0
+          },
+          {
+            "week": 6,
+            "strikes": 0
           }
         ],
         "season": 0
@@ -689,119 +453,250 @@
       "lineup": [
         {
           "slot": "QB",
-          "name": "Matthew Stafford",
-          "pts": 21.8,
+          "name": "Drake Maye",
+          "pts": 21.6,
           "bye": false
         },
         {
           "slot": "RB",
           "name": "Derrick Henry",
-          "pts": 15.6,
+          "pts": 16.4,
           "bye": false
         },
         {
           "slot": "RB",
           "name": "D'Andre Swift",
-          "pts": 13.9,
+          "pts": 14.5,
           "bye": false
         },
         {
           "slot": "WR",
-          "name": "Davante Adams",
-          "pts": 14.6,
+          "name": "Amon-Ra St. Brown",
+          "pts": 16,
           "bye": false
         },
         {
           "slot": "WR",
-          "name": "Matthew Golden",
-          "pts": 12.5,
+          "name": "Jalen Coker",
+          "pts": 13,
           "bye": false
         },
         {
           "slot": "TE",
           "name": "George Kittle",
-          "pts": 12.5,
+          "pts": 13.8,
           "bye": false
         },
         {
           "slot": "K",
           "name": "Trey Smack",
-          "pts": 9.1,
+          "pts": 8.9,
           "bye": false
         },
         {
           "slot": "DEF",
           "name": "PHI D/ST",
-          "pts": 6.3,
+          "pts": 6,
           "bye": false
         },
         {
           "slot": "DL",
-          "name": "Greg Rousseau",
-          "pts": 8.9,
+          "name": "Austin Booker",
+          "pts": 6.8,
           "bye": false
         },
         {
           "slot": "LB",
           "name": "Nakobe Dean",
-          "pts": 9.3,
+          "pts": 9,
           "bye": false
         },
         {
           "slot": "DB",
           "name": "Nick Emmanwori",
-          "pts": 6.3,
+          "pts": 6.4,
           "bye": false
         },
         {
           "slot": "FLEX",
-          "name": "Cam Skattebo",
-          "pts": 12.1,
+          "name": "Matthew Golden",
+          "pts": 12.9,
           "bye": false
         },
         {
           "slot": "FLEX",
-          "name": "Jalen Coker",
-          "pts": 10.7,
+          "name": "Breece Hall",
+          "pts": 12.6,
           "bye": false
         },
         {
           "slot": "IDP_FLEX",
-          "name": "Blake Cashman",
-          "pts": 0,
+          "name": "Elijah Ponder",
+          "pts": 2.1,
+          "bye": false
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "rank": 5,
+      "prevRank": 4,
+      "name": "ehess3648",
+      "owner": "ehess3648",
+      "avatar": "https://sleepercdn.com/avatars/thumbs/51385ba57cd089261f6de9ce483b8716",
+      "score": 56.3,
+      "w": 1,
+      "l": 2,
+      "tie": 0,
+      "apW": 14,
+      "apL": 13,
+      "pf": 459.2,
+      "ppg": 153.1,
+      "luck": -0.6,
+      "proj": 155.1,
+      "comp": {
+        "allPlay": 0.55,
+        "ppg": 0.508,
+        "winPct": 0.333,
+        "roster": 0.736
+      },
+      "engagement": {
+        "status": "Active",
+        "strikes": 0,
+        "reasons": [],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          },
+          {
+            "week": 5,
+            "strikes": 0
+          },
+          {
+            "week": 6,
+            "strikes": 0
+          }
+        ],
+        "season": 0
+      },
+      "lineup": [
+        {
+          "slot": "QB",
+          "name": "Lamar Jackson",
+          "pts": 20.9,
+          "bye": false
+        },
+        {
+          "slot": "RB",
+          "name": "Bijan Robinson",
+          "pts": 20.7,
+          "bye": false
+        },
+        {
+          "slot": "RB",
+          "name": "Woody Marks",
+          "pts": 13.9,
+          "bye": false
+        },
+        {
+          "slot": "WR",
+          "name": "Luther Burden III",
+          "pts": 10.2,
+          "bye": false
+        },
+        {
+          "slot": "WR",
+          "name": "Emeka Egbuka",
+          "pts": 8.8,
+          "bye": false
+        },
+        {
+          "slot": "TE",
+          "name": "Brock Bowers",
+          "pts": 13.2,
+          "bye": false
+        },
+        {
+          "slot": "K",
+          "name": "Spencer Shrader",
+          "pts": 9.1,
+          "bye": false
+        },
+        {
+          "slot": "DEF",
+          "name": "BAL D/ST",
+          "pts": 6.1,
+          "bye": false
+        },
+        {
+          "slot": "DL",
+          "name": "Donovan Ezeiruaku",
+          "pts": 6.4,
+          "bye": false
+        },
+        {
+          "slot": "LB",
+          "name": "Demetrius Knight Jr.",
+          "pts": 8.3,
+          "bye": false
+        },
+        {
+          "slot": "DB",
+          "name": "Kyle Hamilton",
+          "pts": 7.9,
+          "bye": false
+        },
+        {
+          "slot": "FLEX",
+          "name": "Ollie Gordon II",
+          "pts": 12.3,
+          "bye": false
+        },
+        {
+          "slot": "FLEX",
+          "name": "Rhamondre Stevenson",
+          "pts": 10,
+          "bye": false
+        },
+        {
+          "slot": "IDP_FLEX",
+          "name": "Evan Williams",
+          "pts": 7.6,
           "bye": false
         }
       ]
     },
     {
       "id": 5,
-      "rank": 7,
+      "rank": 6,
       "prevRank": 7,
       "name": "Sunday Scares",
       "owner": "keshawnhen",
       "avatar": "https://sleepercdn.com/avatars/thumbs/2aafee9999e4886980f31d5b84f44e81",
-      "score": 36.9,
-      "w": 1,
+      "score": 55.1,
+      "w": 2,
       "l": 1,
       "tie": 0,
-      "apW": 10,
-      "apL": 8,
-      "pf": 331.3,
-      "ppg": 165.7,
-      "luck": -0.1,
-      "proj": 135.9,
+      "apW": 11,
+      "apL": 16,
+      "pf": 452,
+      "ppg": 150.7,
+      "luck": 0.8,
+      "proj": 154,
       "comp": {
-        "allPlay": 0.5,
-        "ppg": 0.552,
-        "winPct": 0.5,
-        "roster": 0.019
+        "allPlay": 0.4,
+        "ppg": 0.461,
+        "winPct": 0.667,
+        "roster": 0.719
       },
       "engagement": {
-        "status": "Questionable",
-        "strikes": 1,
+        "status": "Doubtful",
+        "strikes": 2,
         "reasons": [
           "Started Josh Jacobs (ruled out, Wk 5), with a viable player on the bench",
-          "Started DJ Moore (ruled out, Wk 5), with a viable player on the bench"
+          "Started DJ Moore (ruled out, Wk 5), with a viable player on the bench",
+          "Started DJ Moore (ruled out, Wk 6), with a viable player on the bench"
         ],
         "byWeek": [
           {
@@ -811,6 +706,142 @@
           {
             "week": 5,
             "strikes": 1
+          },
+          {
+            "week": 6,
+            "strikes": 1
+          }
+        ],
+        "season": 2
+      },
+      "lineup": [
+        {
+          "slot": "QB",
+          "name": "Jared Goff",
+          "pts": 18.7,
+          "bye": false
+        },
+        {
+          "slot": "RB",
+          "name": "Jahmyr Gibbs",
+          "pts": 22.6,
+          "bye": false
+        },
+        {
+          "slot": "RB",
+          "name": "Bucky Irving",
+          "pts": 15.6,
+          "bye": false
+        },
+        {
+          "slot": "WR",
+          "name": "Jaylen Waddle",
+          "pts": 10.7,
+          "bye": false
+        },
+        {
+          "slot": "WR",
+          "name": "George Pickens",
+          "pts": 9.6,
+          "bye": false
+        },
+        {
+          "slot": "TE",
+          "name": "Trey McBride",
+          "pts": 12,
+          "bye": false
+        },
+        {
+          "slot": "K",
+          "name": "Ka'imi Fairbairn",
+          "pts": 9.8,
+          "bye": false
+        },
+        {
+          "slot": "DEF",
+          "name": "HOU D/ST",
+          "pts": 9.4,
+          "bye": false
+        },
+        {
+          "slot": "DL",
+          "name": "Jared Verse",
+          "pts": 5.3,
+          "bye": false
+        },
+        {
+          "slot": "LB",
+          "name": "Carson Schwesinger",
+          "pts": 8,
+          "bye": false
+        },
+        {
+          "slot": "DB",
+          "name": "Dillon Thieneman",
+          "pts": 7.6,
+          "bye": false
+        },
+        {
+          "slot": "FLEX",
+          "name": "RJ Harvey",
+          "pts": 9.8,
+          "bye": false
+        },
+        {
+          "slot": "FLEX",
+          "name": "Tre Tucker",
+          "pts": 7.6,
+          "bye": false
+        },
+        {
+          "slot": "IDP_FLEX",
+          "name": "Zack Baun",
+          "pts": 7.3,
+          "bye": false
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "rank": 7,
+      "prevRank": 5,
+      "name": "CodeBlue1",
+      "owner": "CodeBlue1",
+      "avatar": "https://sleepercdn.com/avatars/thumbs/db47d5f7be11ad6a9d094accc45e52b0",
+      "score": 46.6,
+      "w": 2,
+      "l": 1,
+      "tie": 0,
+      "apW": 12,
+      "apL": 15,
+      "pf": 443.7,
+      "ppg": 147.9,
+      "luck": 0.7,
+      "proj": 136.8,
+      "comp": {
+        "allPlay": 0.45,
+        "ppg": 0.407,
+        "winPct": 0.667,
+        "roster": 0.431
+      },
+      "engagement": {
+        "status": "Questionable",
+        "strikes": 1,
+        "reasons": [
+          "Left a slot empty (Wk 6), with a viable player on the bench"
+        ],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          },
+          {
+            "week": 5,
+            "strikes": 0
+          },
+          {
+            "week": 6,
+            "strikes": 1
           }
         ],
         "season": 1
@@ -818,86 +849,86 @@
       "lineup": [
         {
           "slot": "QB",
-          "name": "Kirk Cousins",
-          "pts": 17.7,
+          "name": "Jacoby Brissett",
+          "pts": 14,
           "bye": false
         },
         {
           "slot": "RB",
-          "name": "Bucky Irving",
-          "pts": 13.6,
+          "name": "Javonte Williams",
+          "pts": 16.4,
           "bye": false
         },
         {
           "slot": "RB",
-          "name": "RJ Harvey",
-          "pts": 8.4,
+          "name": "Ashton Jeanty",
+          "pts": 13.9,
           "bye": false
         },
         {
           "slot": "WR",
-          "name": "DJ Moore",
-          "pts": 12.5,
+          "name": "Jaxon Smith-Njigba",
+          "pts": 20.2,
           "bye": false
         },
         {
           "slot": "WR",
-          "name": "George Pickens",
-          "pts": 10.9,
+          "name": "Garrett Wilson",
+          "pts": 13.9,
           "bye": false
         },
         {
           "slot": "TE",
-          "name": "Trey McBride",
-          "pts": 13,
+          "name": "Isaiah Likely",
+          "pts": 9.6,
           "bye": false
         },
         {
           "slot": "K",
-          "name": "Ka'imi Fairbairn",
-          "pts": 8.5,
+          "name": "Cam Little",
+          "pts": 0,
           "bye": false
         },
         {
           "slot": "DEF",
-          "name": "HOU D/ST",
-          "pts": 6.3,
+          "name": "PIT D/ST",
+          "pts": 8.1,
           "bye": false
         },
         {
           "slot": "DL",
-          "name": "Jared Verse",
-          "pts": 5.5,
+          "name": "Danielle Hunter",
+          "pts": 6,
           "bye": false
         },
         {
           "slot": "LB",
-          "name": "Carson Schwesinger",
-          "pts": 7.9,
+          "name": "Roquan Smith",
+          "pts": 8,
           "bye": false
         },
         {
           "slot": "DB",
-          "name": "Dillon Thieneman",
-          "pts": 7.7,
+          "name": "Xavier McKinney",
+          "pts": 6.9,
           "bye": false
         },
         {
           "slot": "FLEX",
-          "name": "Jaylen Waddle",
-          "pts": 9.2,
+          "name": "Michael Wilson",
+          "pts": 10.3,
           "bye": false
         },
         {
           "slot": "FLEX",
-          "name": "Jacory Croskey-Merritt",
-          "pts": 7.6,
+          "name": "Travis Kelce",
+          "pts": 9.4,
           "bye": false
         },
         {
           "slot": "IDP_FLEX",
-          "name": "Zack Baun",
-          "pts": 7,
+          "name": "Sonny Styles",
+          "pts": 0,
           "bye": false
         }
       ]
@@ -905,25 +936,25 @@
     {
       "id": 8,
       "rank": 8,
-      "prevRank": 9,
+      "prevRank": 8,
       "name": "Americanbadass247",
       "owner": "Brenty247",
       "avatar": "https://sleepercdn.com/avatars/thumbs/51385ba57cd089261f6de9ce483b8716",
-      "score": 34.2,
+      "score": 32,
       "w": 0,
-      "l": 2,
+      "l": 3,
       "tie": 0,
-      "apW": 5,
-      "apL": 13,
-      "pf": 293,
-      "ppg": 146.5,
-      "luck": -0.6,
-      "proj": 212.1,
+      "apW": 10,
+      "apL": 17,
+      "pf": 433.4,
+      "ppg": 144.5,
+      "luck": -1.1,
+      "proj": 137.1,
       "comp": {
-        "allPlay": 0.143,
-        "ppg": 0.239,
+        "allPlay": 0.35,
+        "ppg": 0.339,
         "winPct": 0,
-        "roster": 0.798
+        "roster": 0.436
       },
       "engagement": {
         "status": "Active",
@@ -937,6 +968,10 @@
           {
             "week": 5,
             "strikes": 0
+          },
+          {
+            "week": 6,
+            "strikes": 0
           }
         ],
         "season": 0
@@ -944,237 +979,111 @@
       "lineup": [
         {
           "slot": "QB",
-          "name": "Aaron Rodgers",
-          "pts": 15.9,
+          "name": "Bo Nix",
+          "pts": 19.4,
           "bye": false
         },
         {
           "slot": "RB",
           "name": "Christian McCaffrey",
-          "pts": 18.8,
+          "pts": 18.5,
           "bye": false
         },
         {
           "slot": "RB",
           "name": "Jaylen Warren",
-          "pts": 14.4,
+          "pts": 15.2,
           "bye": false
         },
         {
           "slot": "WR",
-          "name": "Denzel Boston",
-          "pts": 8.7,
+          "name": "Justin Jefferson",
+          "pts": 14.1,
           "bye": false
         },
         {
           "slot": "WR",
-          "name": "Jakobi Meyers",
-          "pts": 7.2,
+          "name": "Tee Higgins",
+          "pts": 12.8,
           "bye": false
         },
         {
           "slot": "TE",
           "name": "Colston Loveland",
-          "pts": 8.2,
+          "pts": 7.7,
           "bye": false
         },
         {
           "slot": "K",
           "name": "Cameron Dicker",
-          "pts": 7,
+          "pts": 0,
           "bye": false
         },
         {
           "slot": "DEF",
-          "name": "DET D/ST",
-          "pts": 92,
-          "bye": true
+          "name": "NE D/ST",
+          "pts": 6.3,
+          "bye": false
         },
         {
           "slot": "DL",
           "name": "Nik Bonitto",
-          "pts": 6.4,
+          "pts": 7,
           "bye": false
         },
         {
           "slot": "LB",
           "name": "Devin Bush",
-          "pts": 7.2,
+          "pts": 7.3,
           "bye": false
         },
         {
           "slot": "DB",
           "name": "Tykee Smith",
-          "pts": 6,
+          "pts": 6.3,
           "bye": false
         },
         {
           "slot": "FLEX",
-          "name": "KC Concepcion",
-          "pts": 7.1,
+          "name": "Denzel Boston",
+          "pts": 9.4,
           "bye": false
         },
         {
           "slot": "FLEX",
-          "name": "Kyle Pitts",
-          "pts": 6.8,
+          "name": "KC Concepcion Jr.",
+          "pts": 7.7,
           "bye": false
         },
         {
           "slot": "IDP_FLEX",
           "name": "Abdul Carter",
-          "pts": 6.3,
-          "bye": false
-        }
-      ]
-    },
-    {
-      "id": 4,
-      "rank": 9,
-      "prevRank": 10,
-      "name": "AlexGong",
-      "owner": "AlexGong",
-      "avatar": "https://sleepercdn.com/avatars/thumbs/d55d1f7075eda01948318de4af616075",
-      "score": 13.2,
-      "w": 1,
-      "l": 1,
-      "tie": 0,
-      "apW": 3,
-      "apL": 15,
-      "pf": 278.1,
-      "ppg": 139.1,
-      "luck": 0.7,
-      "proj": 143.1,
-      "comp": {
-        "allPlay": 0,
-        "ppg": 0.118,
-        "winPct": 0.5,
-        "roster": 0.093
-      },
-      "engagement": {
-        "status": "Active",
-        "strikes": 0,
-        "reasons": [],
-        "byWeek": [
-          {
-            "week": 4,
-            "strikes": 0
-          },
-          {
-            "week": 5,
-            "strikes": 0
-          }
-        ],
-        "season": 0
-      },
-      "lineup": [
-        {
-          "slot": "QB",
-          "name": "Patrick Mahomes",
-          "pts": 19.1,
-          "bye": false
-        },
-        {
-          "slot": "RB",
-          "name": "Jeremiyah Love",
-          "pts": 9.1,
-          "bye": false
-        },
-        {
-          "slot": "RB",
-          "name": "J.K. Dobbins",
-          "pts": 7,
-          "bye": false
-        },
-        {
-          "slot": "WR",
-          "name": "Puka Nacua",
-          "pts": 19.5,
-          "bye": false
-        },
-        {
-          "slot": "WR",
-          "name": "Drake London",
-          "pts": 15.8,
-          "bye": false
-        },
-        {
-          "slot": "TE",
-          "name": "Juwan Johnson",
-          "pts": 8.8,
-          "bye": false
-        },
-        {
-          "slot": "K",
-          "name": "Brandon Aubrey",
-          "pts": 8.7,
-          "bye": false
-        },
-        {
-          "slot": "DEF",
-          "name": "SEA D/ST",
-          "pts": 8.4,
-          "bye": false
-        },
-        {
-          "slot": "DL",
-          "name": "Maxx Crosby",
-          "pts": 8,
-          "bye": false
-        },
-        {
-          "slot": "LB",
-          "name": "Nick Bolton",
-          "pts": 8.1,
-          "bye": false
-        },
-        {
-          "slot": "DB",
-          "name": "Travis Hunter",
-          "pts": 1.3,
-          "bye": false
-        },
-        {
-          "slot": "FLEX",
-          "name": "Parker Washington",
-          "pts": 12.7,
-          "bye": false
-        },
-        {
-          "slot": "FLEX",
-          "name": "Rome Odunze",
-          "pts": 8.5,
-          "bye": false
-        },
-        {
-          "slot": "IDP_FLEX",
-          "name": "Fred Warner",
-          "pts": 8.1,
+          "pts": 5.6,
           "bye": false
         }
       ]
     },
     {
       "id": 9,
-      "rank": 10,
-      "prevRank": 8,
+      "rank": 9,
+      "prevRank": 10,
       "name": "hgundie",
       "owner": "hgundie",
       "avatar": "https://sleepercdn.com/avatars/thumbs/51385ba57cd089261f6de9ce483b8716",
-      "score": 2.1,
-      "w": 0,
+      "score": 12.5,
+      "w": 1,
       "l": 2,
       "tie": 0,
-      "apW": 4,
-      "apL": 14,
-      "pf": 263.6,
-      "ppg": 131.8,
-      "luck": -0.4,
-      "proj": 134,
+      "apW": 7,
+      "apL": 20,
+      "pf": 390.6,
+      "ppg": 130.2,
+      "luck": 0.2,
+      "proj": 111.1,
       "comp": {
-        "allPlay": 0.071,
-        "ppg": 0,
-        "winPct": 0,
+        "allPlay": 0.2,
+        "ppg": 0.059,
+        "winPct": 0.333,
         "roster": 0
       },
       "engagement": {
@@ -1189,6 +1098,10 @@
           {
             "week": 5,
             "strikes": 0
+          },
+          {
+            "week": 6,
+            "strikes": 0
           }
         ],
         "season": 0
@@ -1197,85 +1110,217 @@
         {
           "slot": "QB",
           "name": "Jayden Daniels",
-          "pts": 16.9,
+          "pts": 0,
           "bye": false
         },
         {
           "slot": "RB",
-          "name": "James Cook",
-          "pts": 16.1,
+          "name": "Saquon Barkley",
+          "pts": 12.8,
           "bye": false
         },
         {
           "slot": "RB",
-          "name": "MarShawn Lloyd",
-          "pts": 11.5,
+          "name": "Josh Jacobs",
+          "pts": 10.8,
+          "bye": false
+        },
+        {
+          "slot": "WR",
+          "name": "DeVonta Smith",
+          "pts": 11.3,
           "bye": false
         },
         {
           "slot": "WR",
           "name": "Rashee Rice",
-          "pts": 11.9,
-          "bye": false
-        },
-        {
-          "slot": "WR",
-          "name": "Carnell Tate",
-          "pts": 11.1,
+          "pts": 10.4,
           "bye": false
         },
         {
           "slot": "TE",
           "name": "Tucker Kraft",
-          "pts": 10,
+          "pts": 9.4,
           "bye": false
         },
         {
           "slot": "K",
           "name": "Tyler Loop",
-          "pts": 7.8,
+          "pts": 7.6,
           "bye": false
         },
         {
           "slot": "DEF",
-          "name": "WAS D/ST",
-          "pts": 3.7,
+          "name": "GB D/ST",
+          "pts": 4.8,
           "bye": false
         },
         {
           "slot": "DL",
-          "name": "Byron Young",
-          "pts": 7.7,
+          "name": "T.J. Watt",
+          "pts": 7.2,
           "bye": false
         },
         {
           "slot": "LB",
-          "name": "T.J. Watt",
-          "pts": 6.8,
+          "name": "Byron Young",
+          "pts": 7.1,
           "bye": false
         },
         {
           "slot": "DB",
-          "name": "Budda Baker",
-          "pts": 6.5,
+          "name": "Jeremy Chinn",
+          "pts": 6,
           "bye": false
         },
         {
           "slot": "FLEX",
-          "name": "Saquon Barkley",
-          "pts": 10.4,
+          "name": "Tyler Allgeier",
+          "pts": 10,
           "bye": false
         },
         {
           "slot": "FLEX",
-          "name": "DeVonta Smith",
-          "pts": 9.2,
+          "name": "Carnell Tate",
+          "pts": 9.9,
           "bye": false
         },
         {
           "slot": "IDP_FLEX",
           "name": "Aaron Donald",
-          "pts": 4.2,
+          "pts": 3.8,
+          "bye": false
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "rank": 10,
+      "prevRank": 9,
+      "name": "AlexGong",
+      "owner": "AlexGong",
+      "avatar": "https://sleepercdn.com/avatars/thumbs/d55d1f7075eda01948318de4af616075",
+      "score": 12,
+      "w": 1,
+      "l": 2,
+      "tie": 0,
+      "apW": 3,
+      "apL": 24,
+      "pf": 381.6,
+      "ppg": 127.2,
+      "luck": 0.7,
+      "proj": 125,
+      "comp": {
+        "allPlay": 0,
+        "ppg": 0,
+        "winPct": 0.333,
+        "roster": 0.233
+      },
+      "engagement": {
+        "status": "Questionable",
+        "strikes": 1,
+        "reasons": [
+          "Started Jeremiyah Love (ruled out, Wk 6)"
+        ],
+        "byWeek": [
+          {
+            "week": 4,
+            "strikes": 0
+          },
+          {
+            "week": 5,
+            "strikes": 0
+          },
+          {
+            "week": 6,
+            "strikes": 1
+          }
+        ],
+        "season": 1
+      },
+      "lineup": [
+        {
+          "slot": "QB",
+          "name": "Patrick Mahomes",
+          "pts": 16.1,
+          "bye": false
+        },
+        {
+          "slot": "RB",
+          "name": "J.K. Dobbins",
+          "pts": 9.8,
+          "bye": false
+        },
+        {
+          "slot": "RB",
+          "name": "Jeremiyah Love",
+          "pts": 0,
+          "bye": false
+        },
+        {
+          "slot": "WR",
+          "name": "Puka Nacua",
+          "pts": 18.5,
+          "bye": false
+        },
+        {
+          "slot": "WR",
+          "name": "Drake London",
+          "pts": 13.8,
+          "bye": false
+        },
+        {
+          "slot": "TE",
+          "name": "Sam LaPorta",
+          "pts": 10.4,
+          "bye": false
+        },
+        {
+          "slot": "K",
+          "name": "Brandon Aubrey",
+          "pts": 8.9,
+          "bye": false
+        },
+        {
+          "slot": "DEF",
+          "name": "SEA D/ST",
+          "pts": 7.1,
+          "bye": false
+        },
+        {
+          "slot": "DL",
+          "name": "Maxx Crosby",
+          "pts": 7.7,
+          "bye": false
+        },
+        {
+          "slot": "LB",
+          "name": "Nick Bolton",
+          "pts": 7.8,
+          "bye": false
+        },
+        {
+          "slot": "DB",
+          "name": "Travis Hunter",
+          "pts": 0,
+          "bye": false
+        },
+        {
+          "slot": "FLEX",
+          "name": "Rome Odunze",
+          "pts": 8.9,
+          "bye": false
+        },
+        {
+          "slot": "FLEX",
+          "name": "Juwan Johnson",
+          "pts": 8.4,
+          "bye": false
+        },
+        {
+          "slot": "IDP_FLEX",
+          "name": "Fred Warner",
+          "pts": 7.6,
           "bye": false
         }
       ]
